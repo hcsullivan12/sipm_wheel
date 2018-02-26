@@ -1,6 +1,8 @@
+from gui.sipm_wheel_gui import sipm_wheel_gui
 
 def main():
-	print "Hello there"
+	gui = sipm_wheel_gui()
+	gui.create()
 
 
 if __name__ == '__main__':

@@ -15,14 +15,16 @@ const double gain = 0.005; /// V/p.e.
 
 double ComputeLikelihood(double r, double theta, int N0);
 double ComputeLambda(double r, double theta, int N0, int m);
-void MakePlots(std::pair< double, std::vector<double> > parameters);
+void MakePlots(std::multimap<std::string, double> parameters);
 Double_t disk(Double_t* x, Double_t* par) {
         Double_t f = x[0]*x[0] + x[1]*x[1];
         return f;
 }
 
-void MLEReco(std::string outputFilename) {
+void MLEReco(/*std::string outputFilename*/) {
 	
+	clock_t start = clock();
+
 	/*///Initialize data array
 	for (int i = 0; i < numberOfPositions; i++) {
 		data[i] = 0;
@@ -90,13 +92,20 @@ void MLEReco(std::string outputFilename) {
 		if (data[i] > Nmax) Nmax = data[i];
 	}
 	
-	///Start with r= 0, theta = 0, N0 = Nmax and increment by the constants defined above
+	///Variables used for incrementing
+	///Start with r = 0, theta = 0, N0 = Nmax and increment by the constants defined above
 	double radius = 0;
 	double theta  = 0;
 	int N0 = Nmax;
 	
 	double maxLikelihoodValue = 0;
-	std::pair<double, std::vector<double> > maxLikelihood; ///Value, (r, theta, N0)
+	std::multimap<std::string, double> maxLiklihoodParam;
+	
+	///True values!
+	double ml;
+	double mleRadius;
+	double mleTheta;
+	double mleN0;
 	
 	while ( N0 <= upperBoundN ) {
 		std::cout << "N0: " << N0 << std::endl;
@@ -107,13 +116,12 @@ void MLEReco(std::string outputFilename) {
 				double likelihood = ComputeLikelihood( radius, theta, N0 );
 				if ( likelihood > maxLikelihoodValue ) {
 					maxLikelihoodValue = likelihood;
-					//std::cout << "maxLikelihoodValue: " << maxLikelihoodValue << "   radius: " << radius << "   theta: " << theta << std::endl;
 					
-					std::vector<double> temp;
-					temp.push_back(radius); temp.push_back(theta); temp.push_back(N0); 
-					
-					maxLikelihood.first = maxLikelihoodValue;
-					maxLikelihood.second = temp;
+					///Store temporary maximum
+					ml        = maxLikelihoodValue;
+					mleRadius = radius;
+					mleTheta  = theta;
+					mleN0     = N0;
 				}
 				theta = theta + incrementTheta;
 			}
@@ -125,12 +133,20 @@ void MLEReco(std::string outputFilename) {
 		N0++;
 	}
 	
-	std::cout << "Maximum likelihood: " << maxLikelihood.first << std::endl;
-	std::cout << "Radius = " << maxLikelihood.second.at(0) << "cm    Theta = " << maxLikelihood.second.at(1) << " deg     N0: " << maxLikelihood.second.at(2) << "\n\n";
+	maxLiklihoodParam.insert(std::pair<std::string, double>("likelihood", ml) );
+	maxLiklihoodParam.insert(std::pair<std::string, double>("radius", mleRadius) );
+	maxLiklihoodParam.insert(std::pair<std::string, double>("theta", mleTheta) );
+	maxLiklihoodParam.insert(std::pair<std::string, double>("N0", mleN0) );
 	
-	MakePlots(maxLikelihood);
+	std::cout << "Maximum likelihood: " << maxLiklihoodParam.find("likelihood")->second << std::endl;
+	std::cout << "Radius = " << maxLiklihoodParam.find("radius")->second << "cm    Theta = " << maxLiklihoodParam.find("theta")->second << " deg     N0: " << maxLiklihoodParam.find("N0")->second << "\n\n";
 	
-	
+	MakePlots(maxLiklihoodParam);
+
+	clock_t end = clock();
+
+	double duration = (end - start) / (double) CLOCKS_PER_SEC;
+	std::cout << "Run time of " << duration << std::endl;
 }
 
 double ComputeLikelihood(double r, double theta, int N0 ) {
@@ -164,12 +180,12 @@ double ComputeLambda(double r, double theta, int N0, int m) {
 	return lambda_m;
 }
 
-void MakePlots(std::pair< double, std::vector<double> > parameters) {
+void MakePlots(std::multimap<std::string, double> parameters) {
 	
 	///Get the counts lambda_m using the mlestimates for r, theta, and N0
 	unsigned prediction[numberOfPositions];
 	for (int m = 1; m <= numberOfPositions; m++) {
-		double lambda_m = ComputeLambda( parameters.second.at(0), parameters.second.at(1), parameters.second.at(2), m );
+		double lambda_m = ComputeLambda( parameters.find("radius")->second, parameters.find("theta")->second, parameters.find("N0")->second, m );
 		prediction[m - 1] = static_cast<unsigned>(lambda_m);
 	}
 	
@@ -205,15 +221,13 @@ void MakePlots(std::pair< double, std::vector<double> > parameters) {
 	leg->Draw("same");
 
 	TF2* fDisk = new TF2("fDisk", disk, -2*diskRadius, 2*diskRadius, -2*diskRadius, 2*diskRadius, 0);
-        TCanvas *c2 = new TCanvas("c2", "c2", 1000, 1000);
-        fDisk->SetContour(1);
-        fDisk->SetContourLevel(0, diskRadius*diskRadius);
-        fDisk->SetLineColor(1);
-        fDisk->SetLineWidth(4);
-        fDisk->GetXaxis()->SetTitle("x/cm");
-        fDisk->GetYaxis()->SetTitle("y/cm");
-        fDisk->SetTitle("Reconstructed Position of Point Source");
-        fDisk->Draw();
-	
-	
+	TCanvas *c2 = new TCanvas("c2", "c2", 1000, 1000);
+	fDisk->SetContour(1);
+	fDisk->SetContourLevel(0, diskRadius*diskRadius);
+	fDisk->SetLineColor(1);
+	fDisk->SetLineWidth(4);
+	fDisk->GetXaxis()->SetTitle("x/cm");
+	fDisk->GetYaxis()->SetTitle("y/cm");
+	fDisk->SetTitle("Reconstructed Position of Point Source");
+	fDisk->Draw();
 }
