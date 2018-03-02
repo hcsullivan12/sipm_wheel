@@ -1,6 +1,7 @@
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import * 
+from ROOT import TCanvas
 
 class sipm_wheel_gui():
 
@@ -27,7 +28,7 @@ class sipm_wheel_gui():
 		
 		# Create widgets for middle
                 b_space = QPushButton("space")
-                middleLayout.addWidget(b_space)
+		middleLayout.addWidget(b_space)
 		
 		return middleLayout
 

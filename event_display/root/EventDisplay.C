@@ -7,7 +7,7 @@
 #include <TRootEmbeddedCanvas.h>
 #include <RQ_OBJECT.h>
 
-#include "ev_display_MLEReco.cxx"
+#include "ev_display_WheelReco.cxx"
 
 class MyMainFrame {
    RQ_OBJECT("MyMainFrame")
@@ -23,11 +23,13 @@ private:
    TGTextEntry        *diskREnt;
    TGTextEntry       *attenLEnt;
    TGTextEntry         *nPosEnt;
-   TGTextEntry            *rEnt;
+   TGTextEntry            *rEnit;
    TGTextEntry        *thetaEnt;
    TGTextEntry            *NEnt;
+
+   TThread    *t0;
   
-   MLEReco reco;
+   WheelReco Reco;
  
    bool           start = false;
 
@@ -300,10 +302,6 @@ void MyMainFrame::ChangeStartLabel()
   }
   fStart->SetState(kButtonUp);
 
-  /*if(start) {
-     RunReco();
-  }*/
-
 }
 void MyMainFrame::DoDraw() {
    // Draws function graphics in randomly chosen interval
@@ -353,11 +351,18 @@ char MyMainFrame::GetEvents() {
 void MyMainFrame::StartReco() {
    // Start Reco
    std::cout << "Reconstruction starting...\n";
-   reco.Start();
+   t0 = new TThread("t0", handle);
+   t0->Run();
+}
+void *handle(void *ptr) 
+{
+   Reco.Start();
+
 }
 void MyMainFrame::StopReco() {
    // Stop Reco
    std::cout << "Reconstruction stopping...\n";
+   t0->Kill();
 }
 void MyMainFrame::SetParameters() {
    // Get the current settings

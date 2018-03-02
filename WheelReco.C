@@ -235,7 +235,7 @@ double ComputeLambda(double r, double theta, int N0, int m)
 		return 0;
 	}
 	double r_m = TMath::Sqrt( r_mSquared );
-	double lambda_m = N0*TMath::Exp( -r_m/attenuationLength );//(r_m*r_m);
+	double lambda_m = N0*TMath::Exp( -r_m/attenuationLength );//(r_m);
 	
 	return lambda_m;
 }

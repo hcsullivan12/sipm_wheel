@@ -1,0 +1,11 @@
+#!/usr/bin/env python
+#from gui import sipm_wheel_gui
+
+#def main():
+#	gui = sipm_wheel_gui()
+#	gui.create()
+
+
+if __name__ == '__main__':
+	print "Running main()"
+	#main()
