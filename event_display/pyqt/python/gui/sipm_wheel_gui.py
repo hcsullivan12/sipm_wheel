@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import * 
@@ -6,7 +8,7 @@ from ROOT import TCanvas
 class sipm_wheel_gui():
 
 	def __init__(self):
-		print "Created gui object"
+		print ""		
 
 	def getLeftLayout(self):
 		leftLayout   = QVBoxLayout()

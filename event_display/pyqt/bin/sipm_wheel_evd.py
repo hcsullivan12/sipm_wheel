@@ -1,11 +1,20 @@
 #!/usr/bin/env python
-#from gui import sipm_wheel_gui
 
-#def main():
-#	gui = sipm_wheel_gui()
-#	gui.create()
+import sys
+import argparse
+
+from gui import sipm_wheel_gui as GUI
+
+def main():
+
+	# Read in data files with argparse
+	
+	# Instance of GUI object
+	thisgui = GUI.sipm_wheel_gui()
+	thisgui.create()
+
+
 
 
 if __name__ == '__main__':
-	print "Running main()"
-	#main()
+	main()
