@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+project(event)
+
+set(CMAKE_CXX_STANDARD 11)
+
+list(APPEND CMAKE_MODULE_PATH $ENV{ROOTSYS}/etc/cmake)
+find_package(ROOT REQUIRED)
+include_directories(${ROOT_INCLUDE_DIRS})
+add_definitions(${ROOT_CXX_FLAGS})
+
+include_directories(${PROJECT_SOURCE_DIR}/core)
+include_directories(${PROJECT_SOURCE_DIR}/core/io)
+
+file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/src/io/*.cpp)       
+file(GLOB_RECURSE headers ${PROEJCT_SOURCE_DIR}/include/io/*.h)
+
+ROOT_GENERATE_DICTIONARY(CustomClassesDict *.h LINKDEF LinkDef.h)
+
+#Install the ROOT 6 PCM and rootmap files.
+if (${ROOT_VERSION} VERSION_GREATER "6.0")
+	install(
+		FILES
+		${CMAKE_CURRENT_BINARY_DIR}/libCustomClassesDict_rdict.pcm
+		${CMAKE_CURRENT_BINARY_DIR}/libCustomClassesDict.rootmap
+		DESTINATION lib/)
+endif (${ROOT_VERSION} VERSION_GREATER "6.0")
+
+#add_library(CustomClasses SHARED Test.cpp CustomClassesDict)
+#target_link_libraries(CustomClasses ${ROOT_LIBRARIES})
+#install(TARGETS CustomClasses DESTINATION lib/)
+ROOT_LINKER_LIBRARY(RootLib *.cpp RootLibDict.cxx LIBRARIES Core)

@@ -1,12 +1,25 @@
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
-project(EVENT_DIS)
+cmake_minimum_required(VERSION 3.5)
+project(event)
 
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+set(CMAKE_CXX_STANDARD 11)
 
-find_package(ROOT REQUIRED COMPONENTS)
+list(APPEND CMAKE_MODULE_PATH $ENV{ROOTSYS}/etc/cmake)
+find_package(ROOT COMPONENTS REQUIRED)
+include_directories(${ROOT_INCLUDE_DIRS})
+add_definitions(${ROOT_CXX_FLAGS})
 
-include_directories($ENV{EVENT_DIS_BASEDIR}/core)
-ROOT_GENERATE_DICTIONARY(G__Event Test.h LINKDEF LinkDef.h)
+include_directories(${PROJECT_SOURCE_DIR}/core)
+include_directories(${PROJECT_SOURCE_DIR}/core/io)
 
-add_library(Event SHARED Event.cxx G__Event.cxx)
-target_link_libraries(Event ${ROOT_LIBRARIES})
+file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/core/*.cxx)
+file(GLOB_RECURSE headers ${PROJECT_SOURCE_DIR}/core/*.h)
+
+#add_executable(event main.cxx ${sources} ${headers})
+
+#target_link_libraries(event ${ROOT_LIBRARIES})
+
+ROOT_GENERATE_DICTIONARY(Event_Dis_TestDict Test.h LINKDEF LinkDef.h)
+
+add_library(Test SHARED ${PROJECT_SOURCE_DIR}/core/io/Test.cxx Event_Dis_TestDict)
+target_link_libraries(Test ${ROOT_LIBRARIES})
+install(TARGETS Test DESTINATION lib/)
