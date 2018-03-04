@@ -1,4 +1,6 @@
-projectPath="/home/hunter/Desktop/wheel"
+#!/bin/bash
+
+projectPath="$( cd $( dirname $BASH_SOURCE[0]) && pwd)" 
 rootPath="/home/hunter/Software/root-6.06.08"
 
-. ${rootPath}/bin/thisroot.sh
+source ${rootPath}/bin/thisroot.sh
