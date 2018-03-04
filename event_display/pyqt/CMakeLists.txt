@@ -14,12 +14,9 @@ include_directories(${PROJECT_SOURCE_DIR}/core/io)
 file(GLOB_RECURSE sources ${PROJECT_SOURCE_DIR}/core/*.cxx)
 file(GLOB_RECURSE headers ${PROJECT_SOURCE_DIR}/core/*.h)
 
-#add_executable(event main.cxx ${sources} ${headers})
 
-#target_link_libraries(event ${ROOT_LIBRARIES})
+ROOT_GENERATE_DICTIONARY(SiPMWheel_CoreIO Test.h LINKDEF LinkDef.h)
 
-ROOT_GENERATE_DICTIONARY(Event_Dis_TestDict Test.h LINKDEF LinkDef.h)
-
-add_library(Test SHARED ${PROJECT_SOURCE_DIR}/core/io/Test.cxx Event_Dis_TestDict)
-target_link_libraries(Test ${ROOT_LIBRARIES})
-install(TARGETS Test DESTINATION lib/)
+add_library(SiPMWheel_CoreIO SHARED ${PROJECT_SOURCE_DIR}/core/io/Test.cxx SiPMWheel_CoreIO)
+target_link_libraries(SiPMWheel_CoreIO ${ROOT_LIBRARIES})
+install(TARGETS SiPMWheel_CoreIO DESTINATION ${PROJECT_SOURCE_DIR}/lib/)

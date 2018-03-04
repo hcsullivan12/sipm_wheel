@@ -1,0 +1,1 @@
+/home/hunter/Desktop/wheel/event_display/pyqt/lib/libSiPMWheel_CoreIO.so
