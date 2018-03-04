@@ -1,7 +1,0 @@
-/home/hunter/Desktop/wheel/event_display/pyqt/build/CMakeFiles/rebuild_cache.dir
-/home/hunter/Desktop/wheel/event_display/pyqt/build/CMakeFiles/install.dir
-/home/hunter/Desktop/wheel/event_display/pyqt/build/CMakeFiles/list_install_components.dir
-/home/hunter/Desktop/wheel/event_display/pyqt/build/CMakeFiles/SiPMWheel_CoreIO.dir
-/home/hunter/Desktop/wheel/event_display/pyqt/build/CMakeFiles/install/strip.dir
-/home/hunter/Desktop/wheel/event_display/pyqt/build/CMakeFiles/install/local.dir
-/home/hunter/Desktop/wheel/event_display/pyqt/build/CMakeFiles/edit_cache.dir

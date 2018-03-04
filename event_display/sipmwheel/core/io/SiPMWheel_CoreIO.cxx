@@ -38,7 +38,7 @@
 namespace std {} using namespace std;
 
 // Header files passed as explicit arguments
-#include "/home/hunter/Desktop/wheel/event_display/pyqt/core/io/Test.h"
+#include "/home/hunter/Desktop/wheel/event_display/sipmwheel/core/io/Test.h"
 
 // Header files passed via #pragma extra_include
 
@@ -111,15 +111,15 @@ namespace ROOT {
 namespace {
   void TriggerDictionaryInitialization_SiPMWheel_CoreIO_Impl() {
     static const char* headers[] = {
-"/home/hunter/Desktop/wheel/event_display/pyqt/core/io/Test.h",
+"/home/hunter/Desktop/wheel/event_display/sipmwheel/core/io/Test.h",
 0
     };
     static const char* includePaths[] = {
 "/home/hunter/Software/root-6.06.08/include",
-"/home/hunter/Desktop/wheel/event_display/pyqt/core",
-"/home/hunter/Desktop/wheel/event_display/pyqt/core/io",
+"/home/hunter/Desktop/wheel/event_display/sipmwheel/core",
+"/home/hunter/Desktop/wheel/event_display/sipmwheel/core/io",
 "/home/hunter/Software/root-6.06.08/include",
-"/home/hunter/Desktop/wheel/event_display/pyqt/build/",
+"/home/hunter/Desktop/wheel/event_display/sipmwheel/build/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
@@ -128,7 +128,7 @@ namespace {
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_Autoloading_Map;
-namespace wheelevd{class __attribute__((annotate("$clingAutoload$/home/hunter/Desktop/wheel/event_display/pyqt/core/io/Test.h")))  Test;}
+namespace wheelevd{class __attribute__((annotate("$clingAutoload$/home/hunter/Desktop/wheel/event_display/sipmwheel/core/io/Test.h")))  Test;}
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "SiPMWheel_CoreIO dictionary payload"
@@ -138,7 +138,7 @@ namespace wheelevd{class __attribute__((annotate("$clingAutoload$/home/hunter/De
 #endif
 
 #define _BACKWARD_BACKWARD_WARNING_H
-#include "/home/hunter/Desktop/wheel/event_display/pyqt/core/io/Test.h"
+#include "/home/hunter/Desktop/wheel/event_display/sipmwheel/core/io/Test.h"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
