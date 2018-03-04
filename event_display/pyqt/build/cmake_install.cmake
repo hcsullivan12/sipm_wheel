@@ -33,6 +33,30 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/home/hunter/Desktop/wheel/event_display/pyqt/lib/SiPMWheel_CoreIO_rdict.pcm")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/home/hunter/Desktop/wheel/event_display/pyqt/lib" TYPE FILE FILES "/home/hunter/Desktop/wheel/event_display/pyqt/build/SiPMWheel_CoreIO_rdict.pcm")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/home/hunter/Desktop/wheel/event_display/pyqt/core/io/SiPMWheel_CoreIO.cxx")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/home/hunter/Desktop/wheel/event_display/pyqt/core/io" TYPE FILE FILES "/home/hunter/Desktop/wheel/event_display/pyqt/build/SiPMWheel_CoreIO.cxx")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   if(EXISTS "$ENV{DESTDIR}/home/hunter/Desktop/wheel/event_display/pyqt/lib/libSiPMWheel_CoreIO.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}/home/hunter/Desktop/wheel/event_display/pyqt/lib/libSiPMWheel_CoreIO.so")
     file(RPATH_CHECK

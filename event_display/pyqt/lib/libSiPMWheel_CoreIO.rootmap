@@ -1,0 +1,7 @@
+{ decls }
+namespace wheelevd { }
+
+[ libSiPMWheel_CoreIO.so ]
+# List of selected classes
+class wheelevd::Test
+header Test.h

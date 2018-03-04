@@ -1,7 +1,7 @@
 #!bin/bash
 
 EVENT_DIS_CONFIGDIR="$( cd $( dirname $BASH_SOURCE[0]) && pwd)"
-EVENT_DIS_BASEDIR="$( dirname $EVENT_DIS_CONFIG)"
+EVENT_DIS_BASEDIR="$( dirname $EVENT_DIS_CONFIGDIR)"
 
 #echo $EVENT_DIS_CONFIG
 #echo $EVENT_DIS_BASEDIR

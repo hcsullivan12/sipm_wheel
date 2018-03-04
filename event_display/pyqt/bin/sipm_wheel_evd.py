@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from ROOT import TCanvas, TF1
+from ROOT import TCanvas, TF1, wheelevd
 import sys
 import argparse
 import time
@@ -20,6 +20,9 @@ def main():
 	f.Draw()
 	#c1.Update()
 	time.sleep(5)
+
+	obj = wheelevd.Test()
+	obj.Print()
 
 
 if __name__ == '__main__':

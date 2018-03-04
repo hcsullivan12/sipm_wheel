@@ -1,1 +1,3 @@
+/home/hunter/Desktop/wheel/event_display/pyqt/lib/SiPMWheel_CoreIO_rdict.pcm
+/home/hunter/Desktop/wheel/event_display/pyqt/core/io/SiPMWheel_CoreIO.cxx
 /home/hunter/Desktop/wheel/event_display/pyqt/lib/libSiPMWheel_CoreIO.so
