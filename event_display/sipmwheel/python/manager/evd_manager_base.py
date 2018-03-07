@@ -8,9 +8,9 @@ class evd_manager_base(QtCore.QObject):
 	
 	def __init__(self):
 		super(evd_manager_base, self).__init__()
+		
 		# Initialize io manager
 		self._io_manager = io_manager()
-		print "HELLLLLLO"
 		self._io_manager.eventChanged.connect(self.eventChangedEcho)
 
 	def eventChangedEcho(self):
@@ -20,7 +20,7 @@ class evd_manager_base(QtCore.QObject):
 		return self._io_manager
 
 	def event(self):
-		return 1
+		return self._io_manager.event()
 
 	def run(self):
 		return 1

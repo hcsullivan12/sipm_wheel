@@ -10,5 +10,6 @@ except:
 class evd_manager(evd_manager_base):
 	
 	def __init__(self):
-		super(evd_manager_base, self).__init__()
+		
+		super(evd_manager, self).__init__()
 

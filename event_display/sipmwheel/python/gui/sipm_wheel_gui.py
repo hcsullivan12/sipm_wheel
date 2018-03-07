@@ -14,6 +14,7 @@ class sipm_wheel_gui(gui):
 		super(sipm_wheel_gui, self).initUI()		
 
 	def update(self):
+		
 		# Change the labels
 		eventLabel = "Event: " + str(self._evd_manager.event()) 
 		self._eventLabel.setText(eventLabel)
@@ -173,11 +174,13 @@ class sipm_wheel_gui(gui):
 		return self._rightWidget
 
 	def eventUpdateButtonHandler(self):
+		
 		if self._evd_manager.io().isCycling():
+			self._evd_manager.io().stopCycle()
 			self._eventUpdateButton.setText("Start")
-			self._event_manager.io().stopCycle()
+			
 		else:
 			delay = 2
 			self._eventUpdateButton.setText("Stop")
-			self._event_manager.io().startCycle(delay)
+			self._evd_manager.io().startCycle(delay)
 		
