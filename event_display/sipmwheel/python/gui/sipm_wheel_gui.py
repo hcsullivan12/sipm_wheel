@@ -6,11 +6,25 @@ from gui import gui
 
 class sipm_wheel_gui(gui):
 
-	def __init__(self):
+	def __init__(self, manager):
 		super(sipm_wheel_gui, self).__init__()
+		self.connect_manager(manager)
 
 	def initUI(self):
 		super(sipm_wheel_gui, self).initUI()		
+
+	def update(self):
+		# Change the labels
+		eventLabel = "Event: " + str(self._evd_manager.event()) 
+		self._eventLabel.setText(eventLabel)
+		runLabel = "Run: " + str(self._evd_manager.run())
+		self._runLabel.setText(runLabel)
+		subrunLabel = "Subrun: " + str(self._evd_manager.subrun())
+		self._subrunLabel.setText(subrunLabel)
+
+		# Update the detector and plot view
+
+
 
 	def getRightLayout(self):
 	
@@ -135,7 +149,8 @@ class sipm_wheel_gui(gui):
 		b_setparam = QtGui.QPushButton("Set Parameters")
 
 		# Create start/stop buttons
-		b_start = QtGui.QPushButton("Start")
+		self._eventUpdateButton = QtGui.QPushButton("Start")
+		self._eventUpdateButton.clicked.connect(self.eventUpdateButtonHandler)
 
 		# Create the layout
 		self._rightWidget = QtGui.QWidget()
@@ -149,10 +164,20 @@ class sipm_wheel_gui(gui):
 		self._rightLayout.addWidget(b_setparam)
 		self._rightLayout.addStretch(1)
 		self._rightLayout.addWidget(text3)
-		self._rightLayout.addWidget(b_start)
+		self._rightLayout.addWidget(self._eventUpdateButton)
 		self._rightLayout.setAlignment(QtCore.Qt.AlignRight)
 		self._rightWidget.setLayout(self._rightLayout)
 		self._rightWidget.setMaximumWidth(300)
 		self._rightWidget.setMinimumWidth(100)
 		
-		return self._rightWidget		
+		return self._rightWidget
+
+	def eventUpdateButtonHandler(self):
+		if self._evd_manager.io().isCycling():
+			self._eventUpdateButton.setText("Start")
+			self._event_manager.io().stopCycle()
+		else:
+			delay = 2
+			self._eventUpdateButton.setText("Stop")
+			self._event_manager.io().startCycle(delay)
+		

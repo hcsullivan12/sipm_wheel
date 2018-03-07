@@ -1,11 +1,16 @@
 ## This class is a standard event display object ##
 
 from PyQt4 import QtCore, QtGui
+from view_manager import view_manager
 
 class gui(QtGui.QWidget):
 
 	def __init__(self):
 		super(gui, self).__init__()
+		self._view_manager = view_manager()
+
+	def connect_manager(self, manager):
+		self._evd_manager = manager
 
 	def getEventControlButtons(self):
 		self._goToLabel = QtGui.QLabel("Go to: ")
@@ -88,13 +93,14 @@ class gui(QtGui.QWidget):
 		self.leftWidget = self.getLeftLayout()
 		
 		# Get the center view
-		self.centerWidget = self.getCenterLayout()
+		self.centerLayout = self._view_manager.getLayout()
+
 		# Put together 
 		self.master = QtGui.QVBoxLayout()
 		self.slave = QtGui.QHBoxLayout()
 		
 		self.slave.addWidget(self.leftWidget)
-		self.slave.addWidget(self.centerWidget)
+		self.slave.addLayout(self.centerLayout)
 		self.slave.addWidget(self.rightWidget)
 
 		self.master.addLayout(self.slave)
