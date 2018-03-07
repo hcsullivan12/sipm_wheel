@@ -26,4 +26,5 @@ class evd_manager_base(QtCore.QObject):
 		return 1
 
 	def subrun(self):
-		return 1		
+		return 1
+		

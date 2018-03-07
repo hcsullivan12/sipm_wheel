@@ -21,6 +21,7 @@ class viewport(gl.GLViewWidget):
 		self.setBackgroundColor((0,0,0,255))
 		self._background_items =  []
 		self.drawDetector()
+		self.drawAxes()
 		self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
 		#self.show()
 
@@ -36,6 +37,11 @@ class viewport(gl.GLViewWidget):
                                  #[1,1,0], [1,1,1],
                                  #[0,1,1], [0,1,0]],
                                  #dtype=float)
+
+		for _item in self._background_items:
+			self.removeItem(_item)
+			self._background_items = []
+
 		nPoints = 20
 		radius = 1
 		height = 0.1
@@ -55,5 +61,12 @@ class viewport(gl.GLViewWidget):
 		pts = numpy.array(pt_list)
 
 	
-		det_outline = gl.GLLinePlotItem(pos=pts,color=(1,1,1,1), width=3)
-		self.addItem(det_outline)
+		self._det_outline = gl.GLLinePlotItem(pos=pts,color=(1,1,1,1), width=3)
+		self.addItem(self._det_outline)
+		self._background_items.append(self._det_outline)
+
+	def drawAxes(self):
+		self._axes = gl.GLAxisItem()
+		self._axes.setSize(1,1,1)
+		self.addItem(self._axes)
+		self._background_items.append(self._axes)

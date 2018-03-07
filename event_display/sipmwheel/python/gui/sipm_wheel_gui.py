@@ -24,7 +24,8 @@ class sipm_wheel_gui(gui):
 		self._subrunLabel.setText(subrunLabel)
 
 		# Update the detector and plot view
-
+		self._view_manager.updateVoxel()
+		self._view_manager.updatePlot()
 
 
 	def getRightLayout(self):
@@ -181,6 +182,6 @@ class sipm_wheel_gui(gui):
 			
 		else:
 			delay = 2
-			self._eventUpdateButton.setText("Stop")
+			self._eventUpdateButton.setText("Pause")
 			self._evd_manager.io().startCycle(delay)
 		
