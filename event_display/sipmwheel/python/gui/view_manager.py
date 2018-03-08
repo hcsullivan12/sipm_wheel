@@ -29,9 +29,9 @@ class view_manager(QtCore.QObject):
 		self._plotView = pg.GraphicsLayoutWidget()
 		
 		# Set titles
-		plt1 = self._plotView.addPlot(title="SiPM Signals")
-		plt1.setLabel("bottom", "SiPM")
-		plt1.setLabel("left", "p.e.")
+		plot = self._plotView.addPlot(title="SiPM Signals")
+		plot.setLabel("bottom", "SiPM")
+		plot.setLabel("left", "p.e.")
 
 		# Create a random distribution
 		vals = []
@@ -44,32 +44,51 @@ class view_manager(QtCore.QObject):
 
 		# Set colors
 		pg.setConfigOption('background', 'w')
+
 		hist_pen = pg.mkPen(color=[0,0,100,255], width=4)
 		hist_brush = pg.mkBrush(color=[0,0,255,255])
+
+		point_pen = pg.mkPen(color=[0,0,0,255], width=2) 
 		point_brush = pg.mkBrush(color=[0,0,0,255])
-		plt1.plot(x, y, stepMode=True, pen=hist_pen, fillLevel=0, brush=hist_brush)
+
+		hist = pg.PlotCurveItem(x, y, stepMode=True, pen=hist_pen, fillLevel=0, brush=hist_brush)
+		plot.addItem(hist)
 		
 		# Add points 
 		#getPoints()
-		plt2 = plt1.plot()
-		x1 = []
-		y1 = []
+		xtemp = []
+		ytemp = []
 		for i in range(0,8):
-			x1.append(i + 0.5)	
+			xtemp.append(i + 0.5)	
 		for i in range(0,8):
 			error = numpy.random.randint(1,5)
-			y1.append(y[i] + error)
+			ytemp.append(y[i] + error)
 
-		plt2.setData(x1, y1, symbol='o', pen=None, symbolSize=15, symbolBrush=point_brush)
+		x_points = numpy.array(xtemp)
+                y_points = numpy.array(ytemp)
+
+		points = pg.ScatterPlotItem()
+                points.setData(x_points, y_points, symbol='o', pen=None)
+                points.setSize(20)
+                points.setPen(point_pen)
+                points.setBrush(point_brush)
+
+                plot.addItem(points)
 
 		# Add error bars
-		top_error = []
-		bottom_error = []
+		top_error_temp = []
+		bottom_error_temp = []
 		for i in range(0,8):
-			top_error.append(2)
-			bottom_error.append(2)
-		error_bars = pg.ErrorBarItem(x=x1,y=y1,top=top_error,bottom=bottom_error)
+			top_error_temp.append(2)
+			bottom_error_temp.append(2)
 		
+		error_bars = pg.ErrorBarItem(beam=0.25, pen=point_pen)
+
+                top_error = numpy.array(top_error_temp)
+                bottom_error = numpy.array(bottom_error_temp)
+		
+		error_bars.setData(x=x_points,y=y_points,top=top_error,bottom=bottom_error)
+                plot.addItem(error_bars)
 		
 		self._layout.addWidget(self._plotView)
 		self._plotView.show()
@@ -93,7 +112,7 @@ class view_manager(QtCore.QObject):
 			self._gl_hits = None
 			
                 pt_list = []
-                nPoints = numpy.random.randint(1, 10)
+                nPoints = numpy.random.randint(1, 20)
                 for i in range(1, nPoints):
                         x = numpy.random.uniform(-1,1)
                         y = numpy.random.uniform(-1,1)
@@ -107,3 +126,4 @@ class view_manager(QtCore.QObject):
 			self._gl_hits = hits
 			self.getDetectorView().addItem(self._gl_hits)
 			self.getDetectorView()._background_items.append(self._gl_hits)
+
