@@ -7,7 +7,7 @@ class gui(QtGui.QWidget):
 
 	def __init__(self):
 		super(gui, self).__init__()
-		self._view_manager = view_manager()
+		self._view_manager = view_manager(self)
 
 	def connect_manager(self, manager):
 		self._evd_manager = manager
@@ -107,7 +107,7 @@ class gui(QtGui.QWidget):
 		
 
 		self.setLayout(self.master)
-		self.setGeometry(10, 10, 1500, 1000)
+		self.setGeometry(10, 10, 1700, 1200)
 		self.setWindowTitle('Event Display')
 		self.setFocus()
 		self.show()

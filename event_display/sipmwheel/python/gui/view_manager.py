@@ -1,3 +1,6 @@
+## CHECK WHEM LAYOUT IS SET IN SIPMGUI
+
+
 from viewport import viewport
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.opengl as gl
@@ -5,19 +8,33 @@ import pyqtgraph as pg
 import numpy
 import math
 
+import ROOT
+import sip
+
 class view_manager(QtCore.QObject):
-	def __init__(self):
+	def __init__(self, parent):
 		super(view_manager, self).__init__()
 		self._layout = QtGui.QVBoxLayout()
 
 		self._detectorView = viewport()
 		self._layout.addWidget(self._detectorView)
 
+		# Create widget with parent
+		self._hist_plot = None
+
+		self._Address = sip.unwrapinstance(parent)
+		if self._Address is None:
+			print "NONE"
+		self._Canvas = None
+
 		self._plotView = None
 		self.getPlot()
 		#self._layout.addWidget(self._plotView)
 
 		self._gl_hits = None
+
+	def setParent(self, parent_widget):
+		self._parent = parent_widget
 
 	def getLayout(self):
 		return self._layout
@@ -76,7 +93,6 @@ class view_manager(QtCore.QObject):
                 points.setBrush(point_brush)
 		
                 plot.addItem(points)
-		#plot.addItem(self._legend)
 
 		# Add error bars
 		top_error_temp = []
@@ -93,8 +109,23 @@ class view_manager(QtCore.QObject):
 		error_bars.setData(x=x_points,y=y_points,top=top_error,bottom=bottom_error)
                 plot.addItem(error_bars)
 		
-		self._layout.addWidget(self._plotView)
-		self._plotView.show()
+		# ROOT STUFF
+		if self._hist_plot is not None:
+			self._hist_plot = None
+		self._hist_plot = ROOT.TH1F("pipo","pipo", 100,0,100)
+        	
+		if self._Canvas is not None:
+			self._Canvas = None
+	#	self._Canvas = ROOT.TQtWidget(sip.voidptr(self._Address).ascobject())
+        	
+	#	ROOT.SetOwnership( self._Canvas, False )
+
+	#	self._layout.addWidget(sip.wrapinstance(ROOT.AddressOf(self._Canvas)[0],QWidget), 0, 0)
+	        self._hist_plot.Draw()
+
+		
+		#self._layout.addWidget(self._plotView)
+		#self._plotView.show()
 
 	def updateVoxel(self):
 		self.redraw()
