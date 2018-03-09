@@ -3,7 +3,6 @@
 EVENT_DISPLAY_DIR=$( cd $(dirname ${BASH_SOURCE[0]}) && pwd )
 WHEEL_DIR=$( dirname $EVENT_DISPLAY_DIR )
 
-source $WHEEL_DIR/setup.sh
 source $EVENT_DISPLAY_DIR/sipmwheel/config/setup.sh
 
 echo

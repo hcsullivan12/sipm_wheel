@@ -6,13 +6,6 @@ EVENT_DIS_BASEDIR="$( dirname $EVENT_DIS_CONFIGDIR)"
 #echo $EVENT_DIS_CONFIG
 #echo $EVENT_DIS_BASEDIR
 
-# Print out which root
-#echo
-#echo "Using root $(which root)"
-
-# Print out which python
-#echo "Using python $(which python)"
-
 # Get default PATH and PYTHONPATH
 PYTHONPATH_backup=$PYTHONPATH
 PATH_backup=$PATH

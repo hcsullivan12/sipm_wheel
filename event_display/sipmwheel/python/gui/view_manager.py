@@ -50,7 +50,9 @@ class view_manager(QtCore.QObject):
 
 		point_pen = pg.mkPen(color=[0,0,0,255], width=2) 
 		point_brush = pg.mkBrush(color=[0,0,0,255])
-
+		
+		# Add the histogram and legend
+		#plot.addLegend()
 		hist = pg.PlotCurveItem(x, y, stepMode=True, pen=hist_pen, fillLevel=0, brush=hist_brush)
 		plot.addItem(hist)
 		
@@ -67,13 +69,14 @@ class view_manager(QtCore.QObject):
 		x_points = numpy.array(xtemp)
                 y_points = numpy.array(ytemp)
 
-		points = pg.ScatterPlotItem()
+		points = pg.ScatterPlotItem(name="Data")
                 points.setData(x_points, y_points, symbol='o', pen=None)
                 points.setSize(20)
                 points.setPen(point_pen)
                 points.setBrush(point_brush)
-
+		
                 plot.addItem(points)
+		#plot.addItem(self._legend)
 
 		# Add error bars
 		top_error_temp = []

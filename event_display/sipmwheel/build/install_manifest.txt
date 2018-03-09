@@ -1,0 +1,3 @@
+/home/hunter/Desktop/wheel/event_display/sipmwheel/lib/SiPMWheel_CoreIO_rdict.pcm
+/home/hunter/Desktop/wheel/event_display/sipmwheel/core/io/SiPMWheel_CoreIO.cxx
+/home/hunter/Desktop/wheel/event_display/sipmwheel/lib/libSiPMWheel_CoreIO.so
