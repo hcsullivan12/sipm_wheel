@@ -5,17 +5,28 @@
 /// This code will take histogram files outputted by the Lecroy oscilliscope
 /// and compute the gain from the area and amplitude distributions. 
 
+std::string data_dir = "/home/hunter/Desktop/wheel/data/sipm_gains2";
+const unsigned nFiles = 12;
+std::string files[nFiles] = {"M173-3-00000.txt", "M173-4-00000.txt", "M173-5-00000.txt", "M173-6-00000.txt",
+			     "M173-7-00000.txt", "M173-8-00000.txt", "M173-9-00000.txt", "M174-0-00000.txt",
+  			     "M174-1-00000.txt", "M174-2-00000.txt", "M174-3-00000.txt", "M174-4-00000.txt"};
 
 std::string amplitudeFile = "/home/hunter/Desktop/wheel/data/FirstSiPMCharacterization/M1amp200000.txt";
-std::string areaFile      = "/home/hunter/Desktop/wheel/data/FirstSiPMCharacterization/M2area200000.txt";
+///std::string areaFile      = "/home/hunter/Desktop/wheel/data/FirstSiPMCharacterization/M2area200000.txt";
 
 ///Fitting parameters
 double ampThreshold  = 0.004;
 double areaThreshold = 0.01;
-double ampSig        = 5;
+double ampSig        = 0.01; //0.01
 double areaSig       = 0.1*TMath::Power(10, -9);
-double ampFitRange   = 0.002;
+double ampFitRange   = 0.00020;
 double areaFitRange  = 0.1*TMath::Power(10, -9);
+
+TCanvas *master_amp_dist = new TCanvas("master_amp_dist", "All Amplitude Distributions", 1000, 1000);
+TCanvas *master_gain_plot = new TCanvas("master_gain_plot", "All gains", 1000, 1000);
+
+std::vector<double> gains;
+double bias[nFiles];
 
 std::pair< std::vector<double>, std::vector<double> > ReadFile(std::string );
 void MakeHistograms(TH1D* , std::pair< std::vector<double>, std::vector<double> > , std::string );
@@ -23,19 +34,127 @@ TGraphErrors* FitGain(TH1D* , std::string );
 
 void CharacterizeSiPMs()
 {
-	///Amplitude Distribution
-	auto ampData = ReadFile(amplitudeFile);
-	TH1D* ampDist = new TH1D(); 
-	MakeHistograms(ampDist, ampData, "amplitude");
+	///Set correct file names
+	for(int i = 0; i < nFiles; i++){
+		files[i] = data_dir + "/" + files[i];
+	}
 	
-	TCanvas *c1  = new TCanvas("c1", "c1", 800, 800);
-    	ampDist->Draw();
-        auto ampPeaks   = FitGain(ampDist, "amplitude");
-        TCanvas *c2  = new TCanvas("c2", "c2", 800, 800);
-        ampPeaks->Draw("AP*");
+	master_amp_dist->Divide(4,4);
+	master_gain_plot->Divide(4,4);
 
+	///For each file, read it, make histogram, fit
+	for(int file = 0; file < nFiles; file++) {
+		
+ 		///Amplitude Distribution
+		auto ampData = ReadFile(files[file]);
+		TH1D* ampDist = new TH1D(); 
+		MakeHistograms(ampDist, ampData, "amplitude");
+	
+		master_amp_dist->cd(file + 1);		
 
-	///Area Distribution
+		gStyle->SetOptStat(0);
+    		ampDist->Draw("apl");
+
+        	auto ampPeaks = FitGain(ampDist, "amplitude");
+	
+		master_gain_plot->cd(file + 1);
+
+		//std::string amp_peaks_plot = std::to_string(file);
+        	//TCanvas *c2  = new TCanvas(amp_peaks_plot.c_str(), amp_peaks_plot.c_str(), 800, 800);
+		ampPeaks->SetMarkerStyle(20);
+		ampPeaks->SetMarkerColor(1);
+		ampPeaks->Draw("AP");
+		ampPeaks->GetXaxis()->SetLimits(0, 5);
+		ampPeaks->SetMinimum(0);
+		//ampPeaks->Draw("AP*");
+		//master_gain_plot->Update();
+	}
+
+	///Set the bias voltages
+	bias[0]  = 73.3;
+        bias[1]  = 73.4;
+        bias[2]  = 73.5;
+        bias[3]  = 73.6;
+	bias[4]  = 73.7;
+	bias[5]  = 73.8;
+	bias[6]  = 73.9;
+	bias[7]  = 74.0;
+	bias[8]  = 74.1;
+        bias[9]  = 74.2;
+        bias[10] = 74.3;
+        bias[11] = 74.4;
+
+	///Plot versus bias
+	TCanvas *breakdown_plot  = new TCanvas("breakdown_plot", "breakdown_plot", 800, 800);
+	TGraph *g1 = new TGraph(nFiles, bias, &gains[0]);
+	g1->SetTitle("Breakdown of SiPM");
+	g1->GetXaxis()->SetTitle("Bias (V)");
+	g1->GetYaxis()->SetTitle("Gain (mV/p.e.)");
+	g1->GetXaxis()->SetLimits(70,75);
+	g1->SetMinimum(0);
+	g1->SetMaximum( 1.1*(*max_element(gains.begin(), gains.end())) );
+	g1->SetMarkerStyle(23);
+	g1->Draw("AP");
+
+	///Fit for bias plot
+        TF1 *fit1 = new TF1("fit1", "[0] + [1]*x", 70, 74.5);
+
+        fit1->SetParName(1,"Slope");
+        fit1->SetParName(0, "YInt");
+        g1->Fit(fit1, "QR");
+	//g1->GetXaxis()->SetRangeUser(70, 75);
+        gStyle->SetOptFit();
+
+	double breakdown = -fit1->GetParameter(0)/fit1->GetParameter(1);
+	
+	std::cout << "\n\nBreakdown is... " << breakdown << "\n\n";
+
+	///Plot versus overvoltage
+	double bias_overvoltage[nFiles];
+	for (int i = 0; i < nFiles; i++){
+		bias_overvoltage[i] = bias[i] - breakdown;
+	}
+        TCanvas *overvoltage_plot  = new TCanvas("overvoltage_plot", "Overvoltage Plot", 800, 800);
+        TGraph *g2 = new TGraph(nFiles, bias_overvoltage, &gains[0]);
+        g2->SetTitle("SiPM Gain");
+        g2->GetXaxis()->SetTitle("Over-voltage (#DeltaV)");
+        g2->GetYaxis()->SetTitle("Gain (mV/p.e.)");
+        g2->GetXaxis()->SetLimits(0,4);
+	g2->SetMinimum(0);
+	g2->SetMaximum(0.5);
+	g2->SetMarkerStyle(23);
+	g2->SetMarkerSize(2);
+        g2->Draw("AP");
+
+	///Fit for overvoltage plot
+        TF1 *fit2 = new TF1("fit2", "[0] + [1]*x", 0, 4);
+
+        fit2->SetParName(1,"Slope");
+        fit2->SetParName(0, "YInt");
+        g2->Fit(fit2, "QR");
+        gStyle->SetOptFit();
+
+	std::cout << fit2->GetParError(0) << "   " << fit2->GetParError(1) <<  std::endl;
+
+	std::cout << "\n\nGain is... " << std::setprecision(3) << fit2->GetParameter(1) << " mV/p.e./O.V.\n\n";
+
+	///Place the quantities on plot
+	std::string bd = std::to_string(breakdown);
+	//double breakdown_error = breakdown*std::sqrt( std::pow(fit2->GetParError(0)/fit1->GetParameter(0), 2) + std::pow( fit2->GetParError(1)/fit2->GetParameter(1), 2) );
+	//std::string bd_e = std::to_string(breakdown_error);
+	std::string text1 = "V_{BD} = " + bd.substr(0,4) + " V";
+	TLatex *bd_label = new TLatex(1,0.4,text1.c_str());
+	bd_label->SetTextSize(0.025);
+	bd_label->Draw("same");
+	
+	std::string g = std::to_string(fit2->GetParameter(1));
+	std::string e = std::to_string(fit2->GetParError(1));
+	std::string text2 = "G = " + g.substr(0,5) + " #pm " + e.substr(0,5) + " mV/p.e./#DeltaV";
+        TLatex *gain_label = new TLatex(1,0.35,text2.c_str());
+        gain_label->SetTextSize(0.025);
+        gain_label->Draw("same");
+
+	/*///Area Distribution
 	auto areaData = ReadFile(areaFile);
 	TH1D* areaDist = new TH1D();
 	MakeHistograms(areaDist, areaData, "area");
@@ -43,8 +162,8 @@ void CharacterizeSiPMs()
 	TCanvas *c3  = new TCanvas("c3", "c3", 800, 800);
         areaDist->Draw();
         auto areaPeaks   = FitGain(areaDist, "area");
-        TCanvas *c4  = new TCanvas("c4", "c4", 800, 800);
-        areaPeaks->Draw("AP*");
+
+        areaPeaks->Draw("AP*");*/
       
 }
 
@@ -166,7 +285,7 @@ TGraphErrors* FitGain(TH1D *hs, std::string type)
    	do{
      		nchanges=0;
      		for(int p = 0; p < nfound - 1; p++) {
-       			if(peaks[p] < peaks[p+1]) {
+       			if(peaks[p] > peaks[p+1]) {
 	 	 		temp=peaks[p];
 			 	peaks[p]=peaks[p+1];
 	 			peaks[p+1]=temp;
@@ -205,7 +324,7 @@ TGraphErrors* FitGain(TH1D *hs, std::string type)
 
      		//if( (abs(y[g] - gfit->GetParameter(1)) ) < 25 ) {
        			gx[point - 1] = point;
-	       		gy[point - 1] = gfit->GetParameter(1);
+	       		gy[point - 1] = gfit->GetParameter(1);  //Mean
 	       		gey[point - 1] = gfit->GetParError(1);
 			//std::cout << gey[point - 1] << "\n";
 	       		point++;
@@ -237,14 +356,19 @@ TGraphErrors* FitGain(TH1D *hs, std::string type)
    
    	//Fit
    	//TF1 *fit = new TF1("fit","[0] + [1]*x",0.5,gg-0.5);
-   	fit = new TF1("fit", "[0] + [1]*x", 0.5, npeaks);
+   	fit = new TF1("fit", "[0] + [1]*x", 0.5, npeaks + 1);
    
    	fit->SetParName(1,"Gain");
    	fit->SetParName(0, "Pedestal");
    	grpeaks->Fit(fit, "QR"); 
 	gStyle->SetOptFit();
 
-  
+	/*std::pair<TGraphErrors, double> p;
+	p.first = grpeaks;
+	p.second = fit->GetParameter(1);*/
+ 
+	gains.push_back( 1000*fit->GetParameter(1) ); //Converted to mV
+ 
 	return grpeaks;
 }
 
