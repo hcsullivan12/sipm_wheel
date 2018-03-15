@@ -1,39 +1,39 @@
 ///
-/// CharacterizeSiPMs.C
+/// SiPMCharacterization.C
 /// Written by Hunter Sullivan
 ///
 /// This code will take histogram files outputted by the Lecroy oscilliscope
 /// and compute the gain from the area and amplitude distributions. 
 
-std::string data_dir = "/home/hunter/Desktop/wheel/data/sipm_gains2";
+std::string data_dir = "/home/hunter/Desktop/wheel/data/sipms_to_characterize1";
 const unsigned nFiles = 12;
 std::string files[nFiles] = {"M173-3-00000.txt", "M173-4-00000.txt", "M173-5-00000.txt", "M173-6-00000.txt",
 			     "M173-7-00000.txt", "M173-8-00000.txt", "M173-9-00000.txt", "M174-0-00000.txt",
   			     "M174-1-00000.txt", "M174-2-00000.txt", "M174-3-00000.txt", "M174-4-00000.txt"};
 
-std::string amplitudeFile = "/home/hunter/Desktop/wheel/data/FirstSiPMCharacterization/M1amp200000.txt";
-///std::string areaFile      = "/home/hunter/Desktop/wheel/data/FirstSiPMCharacterization/M2area200000.txt";
-
 ///Fitting parameters
 double ampThreshold  = 0.004;
-double areaThreshold = 0.01;
 double ampSig        = 0.01; //0.01
-double areaSig       = 0.1*TMath::Power(10, -9);
 double ampFitRange   = 0.00020;
-double areaFitRange  = 0.1*TMath::Power(10, -9);
 
+///Master Canvases
 TCanvas *master_amp_dist = new TCanvas("master_amp_dist", "All Amplitude Distributions", 1000, 1000);
 TCanvas *master_gain_plot = new TCanvas("master_gain_plot", "All gains", 1000, 1000);
 
 std::vector<double> gains;
 double bias[nFiles];
 
+///Prototypes
 std::pair< std::vector<double>, std::vector<double> > ReadFile(std::string );
 void MakeHistograms(TH1D* , std::pair< std::vector<double>, std::vector<double> > , std::string );
 TGraphErrors* FitGain(TH1D* , std::string );
 
-void CharacterizeSiPMs()
+void SiPMCharacterization(unsigned number_of_SiPMs)
 {
+
+	
+	
+
 	///Set correct file names
 	for(int i = 0; i < nFiles; i++){
 		files[i] = data_dir + "/" + files[i];
@@ -164,7 +164,6 @@ void CharacterizeSiPMs()
         auto areaPeaks   = FitGain(areaDist, "area");
 
         areaPeaks->Draw("AP*");*/
-	//gApplication->Terminate();
       
 }
 
