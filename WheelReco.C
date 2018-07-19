@@ -5,6 +5,30 @@
 /// This code will use an MLE for SiPM wheel reconstruction
 /// by cycling through different radius, theta values
 
+#include "DataReader.h"
+
+/// Configuration file
+std::string config_file = "/home/hunter/projects/wheel/data/sipms_to_characterize/sipm_gains.txt";
+
+/// Data directory
+std::string data_dir = "/home/hunter/projects/wheel/data/spring2018_1";
+
+/// Data files
+std::string sipm1 = data_dir + "/C1-73-5V-30usec-80percent-15msec-00016.txt";
+std::string sipm2 = data_dir + "/C2-73-5V-30usec-80percent-15msec-00016.txt";
+std::string sipm3 = data_dir + "/C3-73-5V-30usec-80percent-15msec-00016.txt";
+std::string sipm4 = data_dir + "/C4-73-5V-30usec-80percent-15msec-00016.txt";
+std::string sipm_data_files[4];
+//sipm_data_files[0] = sipm1; sipm_data_files[1] = sipm2; sipm_data_files[2] = sipm3; sipm_data_files[3] = sipm4;
+
+double x_start = ;
+double x_stop = ;
+double x_inc = ;
+
+
+/// Bias
+double bias = 73.5;
+
 const double diskRadius        = 5.7; ///cm
 const double incrementRadius   = 0.5; ///cm
 const double incrementTheta    = 1.0; ///degrees
@@ -16,6 +40,14 @@ const double beta              = 360/numberOfPositions;  ///Angle between each p
 double data[numberOfPositions] = {1.16456, 0.4465, 0.231687, 0.147494, 0.122291, 0.125334, 0.172409, 0.483366};
 //double data[numberOfPositions] = {0.172409, 0.483366, 1.16456, 0.4465, 0.231687, 0.147494, 0.122291, 0.125334};
 const double gain = 0.005; /// V/p.e.
+
+/// Intialize gain arrays
+std::vector<double> gains;
+std::vector<double> gains_error;
+
+/// Initialize sipm data arrays
+std::vector<double> sipm_counts;
+std::vector<double> sipm_errors;
 
 ///Initialize the ml and container for mle parameters
 double maxLikelihoodValue = 0;
@@ -43,65 +75,47 @@ void WheelReco(/*std::string outputFilename*/)
 {
 	
 	clock_t start = clock();
+
+	sipm_data_files[0] = sipm1; sipm_data_files[1] = sipm2; sipm_data_files[2] = sipm3; sipm_data_files[3] = sipm4;
+
+	// Read configuration file
+	std::ifstream gain_file(config_file.c_str());
+	if (!gain_file) {
+		std::cout << "Cannot open " << config_file << std::endl;
+	} else {
+		///Ignore first line
+		std::string line;
+		std::getline(gain_file, line);
+
+		///Read the gains
+		while (!gain_file.eof()){
+			std::string g;
+			std::string e;
+			std::getline(gain_file, g, ' ');
+			std::getline(gain_file, e);
+
+			gains.push_back( atof(g.c_str()) );
+			gains_error.push_back( atof(e.c_str()) );
+		}
+	}
+
+	/*/// Make sure number of sipms = number of positions
+	if (gains.size() != numberOfPositions) {
+		std::cout << "Error! Number of sipms does not equal number of positions." << std::endl;
+		gApplication->Terminate();		
+	}*/
 	
+	/// Read the data, sipm_counts stores how many p.e. each sipm saw
+	DataReader dr(bias, gains, gains_error);
+	dr.Read(numberOfPositions, x_start, x_stop, x_inc);
+	//dr.ReadData(sipm_data_files);
+	sipm_counts = dr.GetSiPMCounts();
+	//sipm_errors = dr.GetSiPMCountErrors();
+
 	/*///Initialize data array
 	for (int i = 0; i < numberOfPositions; i++) {
 		data[i] = 0;
-	}
-	
-	std::string SiPMDataPath = "/home/hunter/Desktop/wheel/ZackRun/SiPM_Wheel_Zatt";
-		
-	//std::multimap<unsigned, double> SiPMMap;
-	
-	for (int position = 0; position < numberOfPositions; position++) {
-		
-		///Define filename
-		std::string filename = SiPMDataPath + "/Channel_" + "1" + "/M" + "1" + " Pos" + to_string(position) + "_00000.txt";
-		
-		///Open file
-		std::ifstream file(filename.c_str());
-		if (!file) {
-			std::cout << "Cannot open " << filename << std::endl;
-		} else {
-			///Read file
-			std::string word = "";
-			std::vector<double > time;
-			std::vector<double > voltage;
-			double max = 0;
-			
-			std::cout << "Reading Filename: " << filename << "\n" << std::endl;
-			///Skip first text
-			while (word != "Time,Ampl") {
-				file >> word;
-			}
-			while(!file.eof()) {
-				///Data starts
-				std::string vTemp;
-				std::string tTemp;
-				
-				std::getline(file, tTemp, ',');
-				std::getline(file, vTemp);
-				
-				double v = abs(atof(vTemp.c_str()));
-				double t = atof(tTemp.c_str());
-				
-				if (v > max) {
-					max = v;
-				}
-			}
-			
-			///Store max in map
-			//SiPMMap.insert(std::pair<unsigned, double>(position, max) );
-			data[position] = max;
-		}
-		
-		file.close();
 	}*/
-	
-	///First need to read in data and store
-	
-	
-	///Maybe will need the gains
 	
 	
 	///Find max in data and store photons
@@ -177,7 +191,7 @@ void *handle(void *ptr)
         double theta  = 0;
 	
 	TThread::Lock();
-	std::cout << "N0: " << N0 << std::endl;
+	//std::cout << "N0: " << N0 << std::endl;
 	TThread::UnLock();
         while ( radius <= diskRadius ) {
         	//std::cout << "radius: " << radius << std::endl;

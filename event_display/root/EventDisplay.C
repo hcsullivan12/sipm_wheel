@@ -7,7 +7,7 @@
 #include <TRootEmbeddedCanvas.h>
 #include <RQ_OBJECT.h>
 
-#include "ev_display_WheelReco.cxx"
+//#include "ev_display_WheelReco.cxx"
 
 class MyMainFrame {
    RQ_OBJECT("MyMainFrame")
@@ -23,13 +23,13 @@ private:
    TGTextEntry        *diskREnt;
    TGTextEntry       *attenLEnt;
    TGTextEntry         *nPosEnt;
-   TGTextEntry            *rEnit;
+   TGTextEntry            *rEnt;
    TGTextEntry        *thetaEnt;
    TGTextEntry            *NEnt;
 
    TThread    *t0;
   
-   WheelReco Reco;
+   //WheelReco Reco;
  
    bool           start = false;
 
@@ -293,11 +293,11 @@ void MyMainFrame::ChangeStartLabel()
   fStart->SetState(kButtonDown);
   if (!start) {
      fStart->SetText("&Stop");
-     StartReco();
+     //StartReco();
      start = true;
   } else {
      fStart->SetText("&Start");
-     StopReco();
+     //StopReco();
      start = false;
   }
   fStart->SetState(kButtonUp);
@@ -351,14 +351,14 @@ char MyMainFrame::GetEvents() {
 void MyMainFrame::StartReco() {
    // Start Reco
    std::cout << "Reconstruction starting...\n";
-   t0 = new TThread("t0", handle);
-   t0->Run();
+   //t0 = new TThread("t0", handle);
+   //t0->Run();
 }
-void *handle(void *ptr) 
+/*void *handle(void *ptr) 
 {
-   Reco.Start();
+   //Reco.Start();
 
-}
+}*/
 void MyMainFrame::StopReco() {
    // Stop Reco
    std::cout << "Reconstruction stopping...\n";
@@ -380,12 +380,12 @@ void MyMainFrame::SetParameters() {
    std::cout << "Theta increment set to: " << thetaInc << "\n";
    std::cout << "N increment set to: " << NInc << "\n";
    
-   reco.diskRadius        = R;
+   /*reco.diskRadius        = R;
    reco.incrementRadius   = rInc;
    reco.incrementTheta    = thetaInc;
    reco.attenuationLength = attenL;
    reco.numberOfPositions = nPos;
-   reco.incrementN        = NInc;
+   reco.incrementN        = NInc;*/
 }
 void EventDisplay() {
    // Popup the GUI...

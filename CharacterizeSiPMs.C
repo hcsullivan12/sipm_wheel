@@ -2,22 +2,23 @@
 /// CharacterizeSiPMs.C
 /// Written by Hunter Sullivan
 ///
-/// This code will take histogram files outputted by the Lecroy oscilliscope
+/// This code will take histogram csv files outputted by the Lecroy oscilliscope
 /// and compute the gain from the area and amplitude distributions. 
 
-std::string data_dir = "/home/hunter/Desktop/wheel/data/sipm_gains2";
-const unsigned nFiles = 12;
-std::string files[nFiles] = {"M173-3-00000.txt", "M173-4-00000.txt", "M173-5-00000.txt", "M173-6-00000.txt",
-			     "M173-7-00000.txt", "M173-8-00000.txt", "M173-9-00000.txt", "M174-0-00000.txt",
-  			     "M174-1-00000.txt", "M174-2-00000.txt", "M174-3-00000.txt", "M174-4-00000.txt"};
+std::string data_dir = "/home/hunter/projects/wheel/data/sipms_to_characterize/sipm1";
+const unsigned nFiles = 5;
+std::string files[nFiles] = {"M1-72-6-00000.txt", /*"M1-72-8-00000.txt",*/ "M1-73-0-00000.txt", 
+			     "M1-73-2-00000.txt", /*"M1-73-4-00000.txt", "M1-73-6-00000.txt",*/ 
+			     "M1-73-8-00000.txt", "M1-74-0-00000.txt", /*"M1-74-2-00000.txt"*/};
 
-std::string amplitudeFile = "/home/hunter/Desktop/wheel/data/FirstSiPMCharacterization/M1amp200000.txt";
-///std::string areaFile      = "/home/hunter/Desktop/wheel/data/FirstSiPMCharacterization/M2area200000.txt";
+/*std::string files[nFiles] = {"M2-72-8-00000.txt", "M2-73-0-00000.txt", "M2-73-2-00000.txt",
+                             "M2-73-4-00000.txt", "M2-73-6-00000.txt", "M2-73-8-00000.txt", 
+                             "M2-74-0-00000.txt", "M2-74-2-00000.txt"};*/
 
 ///Fitting parameters
-double ampThreshold  = 0.004;
+double ampThreshold  = 0.05; //0.05
 double areaThreshold = 0.01;
-double ampSig        = 0.01; //0.01
+double ampSig        = 0.05; //0.01
 double areaSig       = 0.1*TMath::Power(10, -9);
 double ampFitRange   = 0.00020;
 double areaFitRange  = 0.1*TMath::Power(10, -9);
@@ -71,18 +72,15 @@ void CharacterizeSiPMs()
 	}
 
 	///Set the bias voltages
-	bias[0]  = 73.3;
-        bias[1]  = 73.4;
-        bias[2]  = 73.5;
-        bias[3]  = 73.6;
-	bias[4]  = 73.7;
-	bias[5]  = 73.8;
-	bias[6]  = 73.9;
-	bias[7]  = 74.0;
-	bias[8]  = 74.1;
-        bias[9]  = 74.2;
-        bias[10] = 74.3;
-        bias[11] = 74.4;
+	bias[0]  = 72.8;
+        //bias[1]  = 73.0;
+        bias[1]  = 73.2;
+        bias[2]  = 73.4;
+	//bias[4]  = 73.6;
+	//bias[5]  = 73.8;
+	bias[3]  = 74.0;
+	bias[4]  = 74.2;
+	//bias[5]  = 74.2;
 
 	///Plot versus bias
 	TCanvas *breakdown_plot  = new TCanvas("breakdown_plot", "breakdown_plot", 800, 800);
@@ -121,7 +119,7 @@ void CharacterizeSiPMs()
         g2->GetYaxis()->SetTitle("Gain (mV/p.e.)");
         g2->GetXaxis()->SetLimits(0,4);
 	g2->SetMinimum(0);
-	g2->SetMaximum(0.5);
+	g2->SetMaximum(0.75);
 	g2->SetMarkerStyle(23);
 	g2->SetMarkerSize(2);
         g2->Draw("AP");
@@ -254,7 +252,7 @@ TGraphErrors* FitGain(TH1D *hs, std::string type)
 	TGraphErrors* grpeaks;
 
 	Float_t gain=0;
-	TSpectrum *s = new TSpectrum();
+	TSpectrum *s = new TSpectrum(3);
 	double threshold;
 	if (type == "amplitude") {
 		threshold = ampThreshold;
@@ -263,7 +261,7 @@ TGraphErrors* FitGain(TH1D *hs, std::string type)
 			threshold = areaThreshold;
 		} else std::cout << "Error of type.\n";
 	}
-	Int_t nfound = s->Search(hs, 5, "", threshold);
+	Int_t nfound = s->Search(hs, ampSig, "", threshold);
 	Int_t npeaks = s->GetNPeaks();
 	//printf("Found %d peaks to fit\n",nfound);
    	printf("Found %d peaks to fit\n",npeaks);
@@ -356,7 +354,7 @@ TGraphErrors* FitGain(TH1D *hs, std::string type)
    	grpeaks->SetFillColor(0);
    
    	//Fit
-   	//TF1 *fit = new TF1("fit","[0] + [1]*x",0.5,gg-0.5);
+   	TF1 *fit = new TF1("fit","[0] + [1]*x",0.5,npeaks-0.5);
    	fit = new TF1("fit", "[0] + [1]*x", 0.5, npeaks + 1);
    
    	fit->SetParName(1,"Gain");
