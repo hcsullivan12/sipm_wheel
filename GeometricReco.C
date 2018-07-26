@@ -350,7 +350,7 @@ void GeometricReco() {
 	//const double thetaAvg2 = (2*thetaSum2)/recoPoints.size();
 	const double X        = rAvg*TMath::Cos(thetaAvg);
 	const double Y        = rAvg*TMath::Sin(thetaAvg);
-	
+        std::cout << rAvg << " " << rSum << std::endl;	
 	std::cout << "Average position is: \n";
 	std::cout << "R (SiPM 1)     --> " << rAvg/diskRadius << " diskRadii" << std::endl;
 	std::cout << "Theta (SiPM 1) --> " << thetaAvg*(180/TMath::Pi()) << " degrees" << std::endl;

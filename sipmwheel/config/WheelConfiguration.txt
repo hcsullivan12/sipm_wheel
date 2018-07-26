@@ -1,0 +1,10 @@
+pathToData=/home/hunter/projects/wheel/data/07_22_18
+outputPath=/home/hunter/projects/wheel/outputFile.root
+printFiles=false
+baselineSubtract=true
+saveGraphs=true
+nSiPMs=1
+hitSigma=3
+minimumHitAmp=0.01
+smaRange=100
+resolution=50
