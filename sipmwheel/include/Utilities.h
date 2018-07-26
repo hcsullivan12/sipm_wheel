@@ -27,22 +27,28 @@ struct HitCandidate
   float  hitHeight;
 };
 
-using HitCandidateVec = std::vector<HitCandidate>;
-using SiPMToFilesMap  = std::map<unsigned, std::list<std::string>>;
+using HitCandidateVec     = std::vector<HitCandidate>;
+using SiPMToHitCandVecMap = std::map<unsigned, HitCandidateVec>;
+using SiPMToFilesMap      = std::map<unsigned, std::list<std::string>>;
 
 struct Configuration {
 
-  std::string pathToData;
-  std::string outputPath;
-  std::string pathToConfig;
-  bool        printFiles;
-  bool        baselineSubtract;
-  bool        saveGraphs;
-  unsigned    nSiPMs;
-  unsigned    smaRange;
-  unsigned    resolution;
-  float       hitSigma;
-  float       minimumHitAmp;
+  std::string      pathToData;
+  std::string      outputPath;
+  std::string      pathToConfig;
+  bool             printFiles;
+  bool             baselineSubtract;
+  bool             saveGraphs;
+  unsigned         nSiPMs;
+  unsigned         smaRange;
+  unsigned         resolution;
+  float            hitSigma;
+  float            minimumHitAmp;
+  float            characterizeAmpThr;
+  float            characterizeAmpSig;
+  float            characterizeAmpFitRange;
+  std::list<float> characterizeBiases;
+
 };
 }
 

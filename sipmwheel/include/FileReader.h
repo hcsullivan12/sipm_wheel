@@ -24,7 +24,7 @@ public:
   FileReader();
   ~FileReader();
   
-  void ReadFiles(HitCandidateVec& hitCandidateVec, const SiPMToFilesMap& map, const wheel::Configuration& config);
+  void ReadFiles(SiPMToHitCandVecMap& sipmToHitCandVecMap, const SiPMToFilesMap& map, const wheel::Configuration& config);
 
   std::vector<TGraph>&               GetGraphs()  { return waveforms; }
   std::vector<std::vector<TMarker>>& GetMarkers() { return markers; }

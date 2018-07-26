@@ -16,18 +16,22 @@ FileReader::FileReader()
 FileReader::~FileReader()
 {}
 
-void FileReader::ReadFiles(HitCandidateVec& hitCandidateVec, const SiPMToFilesMap& map, const wheel::Configuration& config)
+void FileReader::ReadFiles(SiPMToHitCandVecMap& sipmToHitCandVecMap, const SiPMToFilesMap& map, const wheel::Configuration& config)
 {
   // Loop over the sipms
   unsigned channel = 1;
   for (const auto& sipm : map)
   {
+    // Create a temp hitVec
+    HitCandidateVec hitCandidateVec;
     // Loop over the files for this sipm
     for (const auto& file : sipm.second)
     {
       // Now read this file
       ReadFile(hitCandidateVec, file, channel, config);
     }
+    // Add this data to the hitVecMap
+    sipmToHitCandVecMap.emplace(channel, hitCandidateVec);
     channel++;
   }
 }

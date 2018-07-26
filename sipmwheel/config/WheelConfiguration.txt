@@ -1,5 +1,5 @@
 pathToData=/home/hunter/projects/wheel/data/07_22_18
-outputPath=/home/hunter/projects/wheel/outputFile.root
+outputPath=/home/hunter/projects/wheel/sipmwheel/outputFile.root
 printFiles=false
 baselineSubtract=true
 saveGraphs=true
@@ -8,3 +8,7 @@ hitSigma=3
 minimumHitAmp=0.01
 smaRange=100
 resolution=50
+characterizeAmpThr=0.02
+characterizeAmpSig=2.0
+characterizeAmpFitRange=0.001
+characterizeBiases=73.5,73.7,74.0

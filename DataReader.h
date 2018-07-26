@@ -49,8 +49,8 @@ void DataReader::Read(unsigned n_chan, double x_start, double x_stop,
     while (iter <= x_stop) {
 	for (unsigned chan = 1; chan <= n_chan; chan++) {
 	    /// Open this file
-	    std::string filename = sipm_data_dir + "F" + std::to_string(chan) + std::string(x_start) + "cm_ch" 
-				   + std::to_string(chan) "00000.txt";
+	    std::string filename = sipm_data_dir + "F" + std::to_string(chan) + std::to_string(x_start) + "cm_ch" 
+				   + std::to_string(chan) + "00000.txt";
 	    std::ifstream file(filename.c_str());
 	    /// Open the file
             std::ifstream file(sipm_data_files[i].c_str());
