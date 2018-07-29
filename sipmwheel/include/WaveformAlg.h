@@ -22,9 +22,11 @@ public:
   ~WaveformAlg();
   
   void SmoothWaveform(std::vector<float>& signal, const wheel::Configuration& config);
+  void SmoothWaveform2(std::vector<float>& signal, const wheel::Configuration& config);
   void FindHitCandidates(std::vector<float>&         waveform,
                          size_t                      roiStartTick,
                          size_t                      channel,
+                         const float&                bias,
     		                 wheel::HitCandidateVec&     hitCandVec,
                          const wheel::Configuration& config); 
 
@@ -34,6 +36,7 @@ private:
   void                    FindHitCandidates(std::vector<float>::const_iterator startItr,
                                             std::vector<float>::const_iterator stopItr,
                                             const std::pair<float, float>&     noiseParameters,
+                                            const float&                       bias,
                                             size_t                             roiStartTick,
 		                                        HitCandidateVec&                   hitCandVec,
                                             const wheel::Configuration&        config);

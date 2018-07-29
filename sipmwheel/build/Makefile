@@ -150,6 +150,60 @@ main.cxx.s:
 	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/main.cxx.s
 .PHONY : main.cxx.s
 
+src/Analyzer.o: src/Analyzer.cxx.o
+
+.PHONY : src/Analyzer.o
+
+# target to build an object file
+src/Analyzer.cxx.o:
+	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o
+.PHONY : src/Analyzer.cxx.o
+
+src/Analyzer.i: src/Analyzer.cxx.i
+
+.PHONY : src/Analyzer.i
+
+# target to preprocess a source file
+src/Analyzer.cxx.i:
+	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.i
+.PHONY : src/Analyzer.cxx.i
+
+src/Analyzer.s: src/Analyzer.cxx.s
+
+.PHONY : src/Analyzer.s
+
+# target to generate assembly for a file
+src/Analyzer.cxx.s:
+	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.s
+.PHONY : src/Analyzer.cxx.s
+
+src/Characterizer.o: src/Characterizer.cxx.o
+
+.PHONY : src/Characterizer.o
+
+# target to build an object file
+src/Characterizer.cxx.o:
+	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o
+.PHONY : src/Characterizer.cxx.o
+
+src/Characterizer.i: src/Characterizer.cxx.i
+
+.PHONY : src/Characterizer.i
+
+# target to preprocess a source file
+src/Characterizer.cxx.i:
+	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.i
+.PHONY : src/Characterizer.cxx.i
+
+src/Characterizer.s: src/Characterizer.cxx.s
+
+.PHONY : src/Characterizer.s
+
+# target to generate assembly for a file
+src/Characterizer.cxx.s:
+	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.s
+.PHONY : src/Characterizer.cxx.s
+
 src/FileReader.o: src/FileReader.cxx.o
 
 .PHONY : src/FileReader.o
@@ -216,6 +270,12 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/Analyzer.o"
+	@echo "... src/Analyzer.i"
+	@echo "... src/Analyzer.s"
+	@echo "... src/Characterizer.o"
+	@echo "... src/Characterizer.i"
+	@echo "... src/Characterizer.s"
 	@echo "... src/FileReader.o"
 	@echo "... src/FileReader.i"
 	@echo "... src/FileReader.s"

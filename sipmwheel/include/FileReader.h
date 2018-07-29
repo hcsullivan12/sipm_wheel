@@ -24,14 +24,16 @@ public:
   FileReader();
   ~FileReader();
   
-  void ReadFiles(SiPMToHitCandVecMap& sipmToHitCandVecMap, const SiPMToFilesMap& map, const wheel::Configuration& config);
+  void ReadFiles(SiPMToTriggerMap& sipmToTriggerMap, const SiPMToFilesMap& map, const wheel::Configuration& config);
+  void ReadFiles(SiPMToTriggerMap& sipmToTriggerMap, const SiPMToBiasTriggerMap& map, const wheel::Configuration& config);
+
 
   std::vector<TGraph>&               GetGraphs()  { return waveforms; }
   std::vector<std::vector<TMarker>>& GetMarkers() { return markers; }
   
 private:
 
-  void ReadFile(HitCandidateVec& hitCandidateVec, const std::string& filename, const unsigned& channel, const wheel::Configuration& config);
+  void ReadFile(HitCandidateVec& hitCandidateVec, const std::string& filename, const float& bias, const unsigned& channel, const wheel::Configuration& config);
   void MakeTheMarkers(const HitCandidateVec& hitCandVec);
 
   std::vector<TGraph>               waveforms;

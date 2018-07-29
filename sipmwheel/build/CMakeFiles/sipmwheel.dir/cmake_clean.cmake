@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/sipmwheel.dir/main.cxx.o"
+  "CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o"
+  "CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o"
   "CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o"
   "CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o"
   "sipmwheel.pdb"

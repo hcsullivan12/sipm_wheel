@@ -81,9 +81,57 @@ CMakeFiles/sipmwheel.dir/main.cxx.o.provides: CMakeFiles/sipmwheel.dir/main.cxx.
 CMakeFiles/sipmwheel.dir/main.cxx.o.provides.build: CMakeFiles/sipmwheel.dir/main.cxx.o
 
 
+CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o: CMakeFiles/sipmwheel.dir/flags.make
+CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o: ../src/Analyzer.cxx
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hunter/projects/wheel/sipmwheel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o -c /home/hunter/projects/wheel/sipmwheel/src/Analyzer.cxx
+
+CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hunter/projects/wheel/sipmwheel/src/Analyzer.cxx > CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.i
+
+CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hunter/projects/wheel/sipmwheel/src/Analyzer.cxx -o CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.s
+
+CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o.requires:
+
+.PHONY : CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o.requires
+
+CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o.provides: CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o.requires
+	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o.provides.build
+.PHONY : CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o.provides
+
+CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o.provides.build: CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o
+
+
+CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o: CMakeFiles/sipmwheel.dir/flags.make
+CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o: ../src/Characterizer.cxx
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hunter/projects/wheel/sipmwheel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o -c /home/hunter/projects/wheel/sipmwheel/src/Characterizer.cxx
+
+CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hunter/projects/wheel/sipmwheel/src/Characterizer.cxx > CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.i
+
+CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hunter/projects/wheel/sipmwheel/src/Characterizer.cxx -o CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.s
+
+CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o.requires:
+
+.PHONY : CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o.requires
+
+CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o.provides: CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o.requires
+	$(MAKE) -f CMakeFiles/sipmwheel.dir/build.make CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o.provides.build
+.PHONY : CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o.provides
+
+CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o.provides.build: CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o
+
+
 CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o: CMakeFiles/sipmwheel.dir/flags.make
 CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o: ../src/FileReader.cxx
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hunter/projects/wheel/sipmwheel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hunter/projects/wheel/sipmwheel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o -c /home/hunter/projects/wheel/sipmwheel/src/FileReader.cxx
 
 CMakeFiles/sipmwheel.dir/src/FileReader.cxx.i: cmake_force
@@ -107,7 +155,7 @@ CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o.provides.build: CMakeFiles/sipmwhe
 
 CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o: CMakeFiles/sipmwheel.dir/flags.make
 CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o: ../src/WaveformAlg.cxx
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hunter/projects/wheel/sipmwheel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hunter/projects/wheel/sipmwheel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o -c /home/hunter/projects/wheel/sipmwheel/src/WaveformAlg.cxx
 
 CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.i: cmake_force
@@ -132,6 +180,8 @@ CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o.provides.build: CMakeFiles/sipmwh
 # Object files for target sipmwheel
 sipmwheel_OBJECTS = \
 "CMakeFiles/sipmwheel.dir/main.cxx.o" \
+"CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o" \
+"CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o" \
 "CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o" \
 "CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o"
 
@@ -139,6 +189,8 @@ sipmwheel_OBJECTS = \
 sipmwheel_EXTERNAL_OBJECTS =
 
 sipmwheel: CMakeFiles/sipmwheel.dir/main.cxx.o
+sipmwheel: CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o
+sipmwheel: CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o
 sipmwheel: CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o
 sipmwheel: CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o
 sipmwheel: CMakeFiles/sipmwheel.dir/build.make
@@ -158,7 +210,7 @@ sipmwheel: /home/hunter/Software/root-v6.14.00-build/lib/libMathCore.so
 sipmwheel: /home/hunter/Software/root-v6.14.00-build/lib/libThread.so
 sipmwheel: /home/hunter/Software/root-v6.14.00-build/lib/libMultiProc.so
 sipmwheel: CMakeFiles/sipmwheel.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/hunter/projects/wheel/sipmwheel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable sipmwheel"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/hunter/projects/wheel/sipmwheel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable sipmwheel"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/sipmwheel.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -167,6 +219,8 @@ CMakeFiles/sipmwheel.dir/build: sipmwheel
 .PHONY : CMakeFiles/sipmwheel.dir/build
 
 CMakeFiles/sipmwheel.dir/requires: CMakeFiles/sipmwheel.dir/main.cxx.o.requires
+CMakeFiles/sipmwheel.dir/requires: CMakeFiles/sipmwheel.dir/src/Analyzer.cxx.o.requires
+CMakeFiles/sipmwheel.dir/requires: CMakeFiles/sipmwheel.dir/src/Characterizer.cxx.o.requires
 CMakeFiles/sipmwheel.dir/requires: CMakeFiles/sipmwheel.dir/src/FileReader.cxx.o.requires
 CMakeFiles/sipmwheel.dir/requires: CMakeFiles/sipmwheel.dir/src/WaveformAlg.cxx.o.requires
 

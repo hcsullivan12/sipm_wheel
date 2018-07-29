@@ -16,27 +16,84 @@ FileReader::FileReader()
 FileReader::~FileReader()
 {}
 
-void FileReader::ReadFiles(SiPMToHitCandVecMap& sipmToHitCandVecMap, const SiPMToFilesMap& map, const wheel::Configuration& config)
+void FileReader::ReadFiles(SiPMToTriggerMap& sipmToTriggerMap, const SiPMToBiasTriggerMap& map, const Configuration& config)
 {
   // Loop over the sipms
   unsigned channel = 1;
   for (const auto& sipm : map)
   {
-    // Create a temp hitVec
-    HitCandidateVec hitCandidateVec;
+    // Create a trigger list for this sipm
+    // If this is characterization, this is 
+    // just a list of the different biases
+    // Place a safety net here
+    if (config.process == "characterize") 
+    {
+      if (config.biases.size() != sipm.second.size()) { std::cout << "Error. The files do not match the biases listed in config.\n"; std::cout << std::endl; exit(1); } 
+    }
+    std::vector<HitCandidateVec> triggerList;
+    unsigned totalSize = 0;
+    for (const auto& bias : sipm.second) totalSize += bias.second.size();
+    triggerList.reserve(sipm.second.size());
+
+    // Loop over the biases for this sipm
+    for (const auto& bias : sipm.second)
+    {
+      // Loop over the files for this bias and sipm
+      for (const auto& file : bias.second)
+      {
+        // Create a temp hitVec
+        HitCandidateVec hitCandVec;
+        // Now read this file
+        
+        ReadFile(hitCandVec, file, bias.first, sipm.first, config);
+        // Safety net to protect against division settings
+        if (hitCandVec.size() < 20) triggerList.emplace_back(hitCandVec);
+        triggerList.emplace_back(hitCandVec);
+      }
+    }
+    sipmToTriggerMap.emplace(sipm.first, triggerList);
+    channel++;
+  }
+
+}
+
+void FileReader::ReadFiles(SiPMToTriggerMap& sipmToTriggerMap, const SiPMToFilesMap& map, const Configuration& config)
+{
+  // Loop over the sipms
+  unsigned channel = 1;
+  for (const auto& sipm : map)
+  {
+    // Create a trigger list for this sipm
+    // If this is characterization, this is 
+    // just a list of the different biases
+    // Place a safety net here
+    if (config.process == "characterize") 
+    {
+      if (config.biases.size() != sipm.second.size()) { std::cout << "Error. The files do not match the biases listed in config.\n"; std::cout << std::endl; exit(1); } 
+    }
+    std::vector<HitCandidateVec> triggerList;
+    triggerList.reserve(sipm.second.size());
+
+    // Since the files and biases are ordered
+    // should be able to iterate through bias set
+    std::set<float>::iterator bias = config.biases.begin();
     // Loop over the files for this sipm
     for (const auto& file : sipm.second)
     {
+      // Create a temp hitVec
+      HitCandidateVec hitCandVec;
       // Now read this file
-      ReadFile(hitCandidateVec, file, channel, config);
+      ReadFile(hitCandVec, file, *bias, channel, config);
+      // Safety net to protect against division settings
+      if (hitCandVec.size() < 20) triggerList.emplace_back(hitCandVec);
+      bias++;
     }
-    // Add this data to the hitVecMap
-    sipmToHitCandVecMap.emplace(channel, hitCandidateVec);
+    sipmToTriggerMap.emplace(channel, triggerList);
     channel++;
   }
 }
 
-void FileReader::ReadFile(HitCandidateVec& hitCandidateVec, const std::string& filename, const unsigned& channel, const wheel::Configuration& config)
+void FileReader::ReadFile(HitCandidateVec& hitCandidateVec, const std::string& filename, const float& bias, const unsigned& channel, const Configuration& config)
 {
   // Open the file
   std::ifstream file(filename.c_str());
@@ -66,11 +123,11 @@ void FileReader::ReadFile(HitCandidateVec& hitCandidateVec, const std::string& f
 
     counter++;
 
-    signal.push_back( -1*atof(yTemp.c_str()) );
+    signal.push_back( atof(yTemp.c_str()) );
   }
  
   WaveformAlg waveformAlg; 
-  waveformAlg.SmoothWaveform(signal, config);
+  waveformAlg.SmoothWaveform2(signal, config);
   std::vector<float> waveform;
   counter = 0;
   for(const auto& amp : signal)
@@ -86,10 +143,13 @@ void FileReader::ReadFile(HitCandidateVec& hitCandidateVec, const std::string& f
 
   // Let's do the hit finding now
   HitCandidateVec hitCandVec;
-  waveformAlg.FindHitCandidates(waveform, 0, channel, hitCandVec, config);
+  waveformAlg.FindHitCandidates(waveform, 0, channel, bias, hitCandVec, config);
+  // Safety net to protect against division settings
+  if (hitCandVec.size() > 20) return;
+
 
   // Only allow to store a few
-  if (config.saveGraphs && waveforms.size() < 10)
+  if (config.saveWaveforms && waveforms.size() < 10)
   {
     TGraph g(waveform.size());
     g.SetNameTitle(filename.c_str(), filename.c_str());
@@ -106,7 +166,7 @@ void FileReader::ReadFile(HitCandidateVec& hitCandidateVec, const std::string& f
   // Append
   hitCandidateVec.insert(hitCandidateVec.end(), hitCandVec.begin(), hitCandVec.end());
 
-  if (config.saveGraphs && waveforms.size() < 10) MakeTheMarkers(hitCandVec);
+  if (config.saveWaveforms && waveforms.size() <= 10) MakeTheMarkers(hitCandVec);
 
   //fits.push_back(FitTheHits(waveform, hitCandVec));
 
@@ -133,3 +193,4 @@ void FileReader::MakeTheMarkers(const HitCandidateVec& hitCandVec)
   markers.push_back(mks);
 }
 }
+
