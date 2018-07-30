@@ -44,7 +44,7 @@ using SiPMToTriggerMap     = std::map<unsigned, std::vector<HitCandidateVec>>;
 using SiPMToBiasTriggerMap = std::map<unsigned, std::map<float, std::set<std::string>>>;  
 using SiPMGains            = std::multimap<unsigned, float>;
 using SiPMInfoMap          = std::map<unsigned, SiPMInfo>;
-using BinIndex             = std::pair<unsigned, std::vector<float>>;
+using BinIndex             = std::pair<unsigned, std::map<std::string, float>>;
 using AccumulatorMap       = std::vector<BinIndex>;  // N0, r, theta, likelihood
 
 struct Configuration 
@@ -52,6 +52,7 @@ struct Configuration
   std::string      pathToData;
   std::string      outputPath;
   std::string      pathToConfig;
+  std::string      recoOutputFile;
   bool             printFiles;
   bool             baselineSubtract;
   bool             saveWaveforms;
@@ -70,9 +71,9 @@ struct Configuration
   std::set<float>           biases;
   std::map<unsigned, float> gains;
   std::map<unsigned, float> breakdowns;
-  unsigned                  thetaBinSize;
-  unsigned                  radiusBinSize;
-  unsigned                  attenuationLengthBinSize;
+  float                     thetaBinSize;
+  float                     radiusBinSize;
+  float                     attenuationLengthBinSize;
   float                     diskRadius;
 };
 }

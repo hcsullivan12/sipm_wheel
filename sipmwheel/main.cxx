@@ -22,6 +22,10 @@
 #include <map>
 #include <list>
 #include "TFile.h"
+#include "TF2.h"
+#include "TH2.h"
+#include "TGraphPolar.h"
+#include "TLegend.h"
 #include "TCanvas.h"
 #include "Utilities.h"
 #include "FileReader.h"
@@ -40,6 +44,7 @@ void Reco(const wheel::Configuration& myConfig);
 void RecordBiases(wheel::Configuration& config, const std::string& value);
 void RecordGains(std::map<unsigned, float>& map, const wheel::Configuration& config, const std::string& value);
 void FillSiPMInfo(wheel::SiPMInfoMap& sipmInfoMap, const wheel::Configuration& config);
+void MakeRecoPlots(wheel::Analyzer& analyzer, const wheel::Configuration& config);
 void SaveCharacterizationPlots(std::multimap<unsigned, std::vector<TH1D>>         ampDists,
                                std::multimap<unsigned, std::vector<TGraphErrors>> ampPeaks,
                                const wheel::Configuration&                        config);
@@ -70,7 +75,7 @@ int main(int argc, char **argv)
 void Reco(const wheel::Configuration& myConfig)
 {
   // First we need to get the files to read data from
-  std::cout << "Getting the files from: " << myConfig.pathToData << std::endl;
+  std::cout << "\nGetting the files from: " << myConfig.pathToData << std::endl;
   wheel::SiPMToFilesMap sipmToFilesMap;
   GetTheFiles(sipmToFilesMap, myConfig);
 
@@ -78,7 +83,7 @@ void Reco(const wheel::Configuration& myConfig)
   if (myConfig.printFiles) PrintTheFiles(sipmToFilesMap);
 
   // Now read the files
-  std::cout << "Reading the files... " << std::endl;
+  std::cout << "\nReading the files... " << std::endl;
   wheel::SiPMToTriggerMap sipmToTriggerMap;
   wheel::FileReader fr;
   fr.ReadFiles(sipmToTriggerMap, sipmToFilesMap, myConfig);
@@ -91,6 +96,9 @@ void Reco(const wheel::Configuration& myConfig)
   FillSiPMInfo(sipmInfoMap, myConfig);
   wheel::Analyzer analyzer;
   analyzer.RunReco(sipmToTriggerMap, sipmInfoMap, myConfig);
+
+  // Now make the plots
+  MakeRecoPlots(analyzer, myConfig);
 }
 
 void Characterize(const wheel::Configuration& myConfig)
@@ -147,8 +155,9 @@ void ReadConfigFile(wheel::Configuration& config)
   {
     std::getline(file, value);
 
-    if      (header == "pathToData")              config.pathToData = value;
-    else if (header == "outputPath")              config.outputPath = value;
+    if      (header == "pathToData")              config.pathToData     = value;
+    else if (header == "outputPath")              config.outputPath     = value;
+    else if (header == "recoOutputFile")          config.recoOutputFile = value;
     else if (header == "printFiles")              value == "true" ? config.printFiles       = true : config.printFiles       = false;
     else if (header == "baselineSubtract")        value == "true" ? config.baselineSubtract = true : config.baselineSubtract = false;
     else if (header == "saveWaveforms")           value == "true" ? config.saveWaveforms    = true : config.saveWaveforms    = false;
@@ -167,9 +176,9 @@ void ReadConfigFile(wheel::Configuration& config)
     else if (header == "biases")                  RecordBiases(config, value); 
     else if (header == "gains")                   RecordGains(config.gains, config, value);
     else if (header == "breakdowns")              RecordGains(config.breakdowns, config, value);
-    else if (header == "thetaBinSize")            config.thetaBinSize  = std::stoi(value);
-    else if (header == "radiusBinSize")           config.radiusBinSize = std::stoi(value);
-    else if (header == "attenuationLengthBinSize") config.attenuationLengthBinSize = std::stoi(value);
+    else if (header == "thetaBinSize")            config.thetaBinSize  = std::stof(value);
+    else if (header == "radiusBinSize")           config.radiusBinSize = std::stof(value);
+    else if (header == "attenuationLengthBinSize") config.attenuationLengthBinSize = std::stof(value);
     else if (header == "diskRadius")              config.diskRadius = std::stof(value);
     else    { std::cout << "Cannot identify " << header << std::endl; exit(1); }
   }
@@ -248,8 +257,8 @@ void GetTheFiles(wheel::SiPMToFilesMap& map, const wheel::Configuration& config)
     std::string sipmDir = config.pathToData + "/sipm" + std::to_string(sipm);
     std::set<std::string> sipmData;
     // Create a temp map for storing these
-    std::map<float, std::set<std::string>> tempMap; 
-    // 
+    std::set<std::string> tempMap; 
+     
     // Loop over the bias directories
     for(const auto& biasDirIter : stdfs::directory_iterator(sipmDir.c_str()))
     {
@@ -260,13 +269,13 @@ void GetTheFiles(wheel::SiPMToFilesMap& map, const wheel::Configuration& config)
       const float thisBias = std::stof(bias);
 
       // Loop over files?
-      std::set<std::string> files;
+      //std::set<std::string> files;
       for (const auto& fileIter : stdfs::directory_iterator(biasDirIter.path().c_str()))
       {
         // Store these into our set
-        files.insert(fileIter.path());
+        tempMap.insert(fileIter.path());
       }
-      tempMap.emplace(thisBias, files);
+      //tempMap.insert(files);
     }
     // Insert into our map
     map.emplace(sipm, tempMap);
@@ -351,7 +360,7 @@ void SaveCharacterizationPlots(std::multimap<unsigned, std::vector<TH1D>>       
 
 void SaveWaveforms(std::vector<TGraph>& graphs, std::vector<std::vector<TMarker>>& markers, const wheel::Configuration& config)
 {
-  std::cout << "Outputing file... " << std::endl;
+  std::cout << "\nOutputing waveforms... \n" << std::endl;
   // Create a file to write to
   TFile f(config.outputPath.c_str(), "RECREATE");
   
@@ -376,55 +385,182 @@ void SaveWaveforms(std::vector<TGraph>& graphs, std::vector<std::vector<TMarker>
  
   f.Close();;
 }
-/*
-void MakeRecoPlots()
+
+Double_t disk(Double_t* x, Double_t* par)
 {
+  Double_t f = x[0]*x[0] + x[1]*x[1];
+  return f;
+}
+
+void MakeRecoPlots(wheel::Analyzer& analyzer, const wheel::Configuration& config)
+{
+  // Get the maps needed for the plots
+  auto accumulatorMap = analyzer.GetAccumulatorMap();
+  auto mleParameters  = analyzer.GetMLEParameters();
+
+  // Make the comparison plot 
+  TCanvas c1("data_mle", "data_mle", 1000, 1000);
   // Get the counts lambda_m using the mlestimates for r, theta, and N0
-  unsigned prediction[numberOfPositions];
-  for (int m = 1; m <= numberOfPositions; m++) {
-    double lambda_m = ComputeLambda( parameters.find("radius")->second, parameters.find("theta")->second, parameters.find("N0")->second, m );
+  std::vector<unsigned> prediction;
+  prediction.reserve(config.nSiPMs);
+  for (int m = 1; m <= config.nSiPMs; m++) 
+  {
+    float lambda_m = analyzer.ComputeLambda( mleParameters[0].second.find("radius")->second, mleParameters[0].second.find("theta")->second, 
+                                             mleParameters[0].first, m, mleParameters[0].second.find("attenuationLength")->second);
     prediction[m - 1] = static_cast<unsigned>(lambda_m);
   }
 
-  TH1D *pred = new TH1D("pred", "pred", numberOfPositions, 0, numberOfPositions);
-  for (int posBin = 1; posBin <= numberOfPositions; posBin++) {
+  TH1D pred("pred", "pred", config.nSiPMs, 0, config.nSiPMs);
+  std::cout << std::endl;
+  for (int posBin = 1; posBin <= config.nSiPMs; posBin++) 
+  {
     std::cout << "Pred Bin " << posBin << " :  " << prediction[posBin - 1] << std::endl;
-    pred->SetBinContent( posBin, prediction[posBin - 1] );
+    pred.SetBinContent( posBin, prediction[posBin - 1] );
   }
 
-  TCanvas *c1 = new TCanvas("c1", "c1", 1000, 1000);
-  pred->SetFillStyle(3001);
-  pred->SetFillColor(kRed);
-  pred->SetLineWidth(3);
-  pred->SetLineColor(kRed);
-  pred->GetXaxis()->SetTitle("SiPM Position");
-  pred->GetYaxis()->SetTitle("p.e");
-  pred->SetTitle("Estimator for SiPM Wheel");
+  pred.SetFillStyle(3001);
+  pred.SetFillColor(kRed);
+  pred.SetLineWidth(3);
+  pred.SetLineColor(kRed);
+  pred.GetXaxis()->SetTitle("SiPM Position");
+  pred.GetYaxis()->SetTitle("p.e");
+  pred.SetTitle("Estimator for SiPM Wheel");
   gStyle->SetOptStat(0);
-  pred->Draw();
+  pred.SetMaximum(30);
+  pred.SetMinimum(0);
+  pred.Draw();
 
-  TH1D *dataHisto = new TH1D("dataHisto", "dataHisto", numberOfPositions, 0, numberOfPositions);
-  for (int posBin = 1; posBin <= numberOfPositions; posBin++) {
-    std::cout << "Data Bin " << posBin << " :  " << data[posBin - 1] << std::endl;
-    dataHisto->SetBinContent( posBin, data[posBin - 1] );
+  TH1D dataHisto("dataHisto", "dataHisto", config.nSiPMs, 0, config.nSiPMs);
+  for (int posBin = 1; posBin <= config.nSiPMs; posBin++) 
+  {
+    std::cout << "Data Bin " << posBin << " :  " << analyzer.GetData().find(posBin)->second << std::endl;
+    dataHisto.SetBinContent( posBin, analyzer.GetData().find(posBin)->second );
   }
-  dataHisto->SetMarkerStyle(21);
-  dataHisto->SetMarkerSize(2);
-  dataHisto->Draw("same P");
+  dataHisto.SetMarkerStyle(21);
+  dataHisto.SetMarkerSize(2);
+  dataHisto.Draw("same P");
 
-  TLegend *leg = new TLegend(0.1,0.6,0.3,0.7);
-  leg->AddEntry(pred, "Estimator", "f");
-  leg->AddEntry(dataHisto, "Data", "p");
-  leg->Draw("same");
+  TLegend leg(0.1,0.6,0.3,0.7);
+  leg.AddEntry(&pred, "Estimator", "f");
+  leg.AddEntry(&dataHisto, "Data", "p");
+  leg.Draw("same");
 
-  TF2* fDisk = new TF2("fDisk", disk, -2*diskRadius, 2*diskRadius, -2*diskRadius, 2*diskRadius, 0);
-  TCanvas *c2 = new TCanvas("c2", "c2", 1000, 1000);
-  fDisk->SetContour(1);
-  fDisk->SetContourLevel(0, diskRadius*diskRadius);
-  fDisk->SetLineColor(1);
-  fDisk->SetLineWidth(4);
-  fDisk->GetXaxis()->SetTitle("x/cm");
-  fDisk->GetYaxis()->SetTitle("y/cm");
-  fDisk->SetTitle("Reconstructed Position of Point Source");
-}*/
+ 
+  // Make the reco plot
+  TCanvas c2("reco", "reco", 1000, 1000);
+  TF2 fDisk("fDisk", disk, -2*config.diskRadius, 2*config.diskRadius, -2*config.diskRadius, 2*config.diskRadius, 0);
+  fDisk.SetContour(1);
+  fDisk.SetContourLevel(0, config.diskRadius*config.diskRadius);
+  fDisk.SetLineColor(1);
+  fDisk.SetLineWidth(4);
+  //fDisk.GetHistogram()->GetXaxis()->SetTitle("x/cm");
+  //fDisk.GetHistogram()->GetYaxis()->SetTitle("y/cm");
+  fDisk.SetTitle("Reconstructed Position of Point Source");
+  double x = mleParameters[0].second.find("radius")->second*TMath::Cos(mleParameters[0].second.find("theta")->second*(TMath::Pi()/180) );
+  double y = mleParameters[0].second.find("radius")->second*TMath::Sin(mleParameters[0].second.find("theta")->second*(TMath::Pi()/180) );
+  // Compute errors
+  //std::vector<float> eX, eY;
+  //ComputeErrors(eX, eY, mleParameters[0], config);
+  TMarker point(x, y, 8);
+  point.SetMarkerColor(4);
+  point.SetMarkerSize(2);
+  fDisk.Draw();
+  fDisk.GetHistogram()->GetXaxis()->SetTitle("x/cm");
+  fDisk.GetHistogram()->GetYaxis()->SetTitle("y/cm");
+  c2.Modified();
+  point.Draw("same");
 
+  // Draw y = 0
+  TF1 line0("line0", "0", -config.diskRadius, config.diskRadius);
+  line0.SetLineStyle(3);
+  line0.SetLineColor(1);
+  line0.SetLineWidth(3);
+  line0.Draw("same");
+
+  // Draw y = x
+  TF1 line1("line1", "x", -(sqrt(2)/2)*config.diskRadius, (sqrt(2)/2)*config.diskRadius);
+  line1.SetLineStyle(3);
+  line1.SetLineColor(1);
+  line1.SetLineWidth(3);
+  line1.Draw("same");
+
+  // Draw y = -x
+  TF1 line2("line2", "-x", -(sqrt(2)/2)*config.diskRadius, (sqrt(2)/2)*config.diskRadius);
+  line2.SetLineStyle(3);
+  line2.SetLineColor(1);
+  line2.SetLineWidth(3);
+  line2.Draw("same");
+
+  // Draw x = 0
+  TF1 line3("line3", "100000*x", -0.00001*config.diskRadius, 0.00001*config.diskRadius);
+  line3.SetLineStyle(3);
+  line3.SetLineColor(1);
+  line3.SetLineWidth(3);
+  line3.Draw("same"); 
+
+  // Now I want to draw a likelihood heat map 
+  TCanvas c3("heatMap", "Likelihood Heat Map", 800, 800);
+  unsigned rBins     = config.diskRadius/config.radiusBinSize;
+  unsigned thetaBins = 360/config.thetaBinSize;
+  
+  TH2F lhHist("lhHist", "Likelihood Heat Map", thetaBins, 0, 360, rBins, 0, config.diskRadius);
+  //TH2F lhHist("lhHist", "lhHist", 2*rBins, -config.diskRadius, config.diskRadius, 2*rBins, -config.diskRadius, config.diskRadius);
+  // Loop through the accumulator map to find all r, theta, and likelihood 
+  // associated with the mle attenuation length
+  const float& attenL = mleParameters[0].second.find("attenuationLength")->second;
+  for (const auto& index : accumulatorMap)
+  {
+    /*// Convert the r and theta to x and y
+    double x = index.second.find("radius")->second*TMath::Cos(index.second.find("theta")->second*(TMath::Pi()/180) );
+    double y = index.second.find("radius")->second*TMath::Sin(index.second.find("theta")->second*(TMath::Pi()/180) );
+
+    lhHist.SetBinContent(lhHist.GetXaxis()->FindBin(x), lhHist.GetYaxis()->FindBin(y), TMath::Exp(index.second.find("likelihood")->second));*/
+    /*std::cout << "Radius     = " << index.second.find("radius")->second     << "  "
+              << "Theta      = " << index.second.find("theta")->second      << "  "
+              << "Likelihood = " << index.second.find("likelihood")->second << std::endl;    */
+    lhHist.SetBinContent(lhHist.GetXaxis()->FindBin(index.second.find("theta")->second),
+                         lhHist.GetYaxis()->FindBin(index.second.find("radius")->second), 
+                         TMath::Exp(index.second.find("likelihood")->second));
+  }
+
+  //lhHist.Draw("colz");
+
+  c3.SetTheta(90.0);
+  c3.SetPhi(0.0);
+  c3.SetTitle("Likelihood Heat Map");
+  gStyle->SetPalette(kBird);
+  lhHist.Draw("lego2 pol");
+
+  // Draw the mle for r, theta
+  /*Double_t theta[1]   = {mleParameters[0].second.find("theta")->second*(TMath::Pi()/180)};
+  Double_t radius[1]  = {mleParameters[0].second.find("radius")->second};
+  Double_t etheta[1]  = {(config.thetaBinSize/2)*(TMath::Pi()/180)};
+  Double_t eradius[1] = {config.radiusBinSize/2};*/
+  
+  /*std::cout << theta[0]*(180/TMath::Pi()) << " " << radius[0] << " " << etheta[0]*(180/TMath::Pi()) << " " << eradius[0] << std::endl;*/
+  
+  // This does not work for some reason, not plotting marker
+  /* TGraphPolar p(1, theta, radius, etheta, eradius);
+  p.SetMarkerStyle(8);
+  p.SetMarkerSize(5);
+  p.SetMarkerColor(2);
+  p.SetLineColor(1);
+  p.SetLineWidth(3);
+  p.Draw("AOPE");
+  c2.Update();
+  p.SetMinRadial(0);
+  p.SetMaxRadial(config.diskRadius);
+  p.GetPolargram()->SetToRadian();*/
+
+  /*TMarker m(theta[0], radius[0], 8);
+  m.SetMarkerColor(2);
+  m.SetMarkerSize(1.5);
+  m.Draw("same");*/
+
+  // Write these to a file
+  std::cout << "\nWriting reco output file... \n" << std::endl;
+  TFile f(config.recoOutputFile.c_str(), "RECREATE");
+  c1.Write();
+  c2.Write();
+  c3.Write();
+}

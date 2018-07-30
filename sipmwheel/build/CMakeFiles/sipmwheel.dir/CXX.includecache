@@ -324,6 +324,20 @@ TObject.h
 string.h
 -
 
+/home/hunter/Software/root-v6.14.00-build/include/TBox.h
+TObject.h
+/home/hunter/Software/root-v6.14.00-build/include/TObject.h
+TAttLine.h
+/home/hunter/Software/root-v6.14.00-build/include/TAttLine.h
+TAttFill.h
+/home/hunter/Software/root-v6.14.00-build/include/TAttFill.h
+TAttBBox2D.h
+/home/hunter/Software/root-v6.14.00-build/include/TAttBBox2D.h
+TPoint.h
+/home/hunter/Software/root-v6.14.00-build/include/TPoint.h
+GuiTypes.h
+/home/hunter/Software/root-v6.14.00-build/include/GuiTypes.h
+
 /home/hunter/Software/root-v6.14.00-build/include/TBuffer.h
 TObject.h
 /home/hunter/Software/root-v6.14.00-build/include/TObject.h
@@ -476,6 +490,12 @@ iostream
 memory
 -
 
+/home/hunter/Software/root-v6.14.00-build/include/TF2.h
+TF1.h
+/home/hunter/Software/root-v6.14.00-build/include/TF1.h
+TArrayD.h
+/home/hunter/Software/root-v6.14.00-build/include/TArrayD.h
+
 /home/hunter/Software/root-v6.14.00-build/include/TFile.h
 atomic
 -
@@ -546,6 +566,24 @@ TFitResultPtr.h
 TGraph.h
 /home/hunter/Software/root-v6.14.00-build/include/TGraph.h
 
+/home/hunter/Software/root-v6.14.00-build/include/TGraphPolar.h
+TGraphErrors.h
+/home/hunter/Software/root-v6.14.00-build/include/TGraphErrors.h
+TAttText.h
+/home/hunter/Software/root-v6.14.00-build/include/TAttText.h
+TAttLine.h
+/home/hunter/Software/root-v6.14.00-build/include/TAttLine.h
+TGraphPolargram.h
+/home/hunter/Software/root-v6.14.00-build/include/TGraphPolargram.h
+
+/home/hunter/Software/root-v6.14.00-build/include/TGraphPolargram.h
+TAttText.h
+/home/hunter/Software/root-v6.14.00-build/include/TAttText.h
+TAttLine.h
+/home/hunter/Software/root-v6.14.00-build/include/TAttLine.h
+TNamed.h
+/home/hunter/Software/root-v6.14.00-build/include/TNamed.h
+
 /home/hunter/Software/root-v6.14.00-build/include/TH1.h
 TAxis.h
 /home/hunter/Software/root-v6.14.00-build/include/TAxis.h
@@ -575,6 +613,14 @@ TFitResultPtr.h
 /home/hunter/Software/root-v6.14.00-build/include/TFitResultPtr.h
 float.h
 -
+
+/home/hunter/Software/root-v6.14.00-build/include/TH2.h
+TH1.h
+/home/hunter/Software/root-v6.14.00-build/include/TH1.h
+TMatrixFBasefwd.h
+/home/hunter/Software/root-v6.14.00-build/include/TMatrixFBasefwd.h
+TMatrixDBasefwd.h
+/home/hunter/Software/root-v6.14.00-build/include/TMatrixDBasefwd.h
 
 /home/hunter/Software/root-v6.14.00-build/include/THashTable.h
 TCollection.h
@@ -615,6 +661,12 @@ typeinfo
 /home/hunter/Software/root-v6.14.00-build/include/TIterator.h
 Rtypes.h
 /home/hunter/Software/root-v6.14.00-build/include/Rtypes.h
+
+/home/hunter/Software/root-v6.14.00-build/include/TLegend.h
+TPave.h
+/home/hunter/Software/root-v6.14.00-build/include/TPave.h
+TAttText.h
+/home/hunter/Software/root-v6.14.00-build/include/TAttText.h
 
 /home/hunter/Software/root-v6.14.00-build/include/TList.h
 TSeqCollection.h
@@ -670,6 +722,14 @@ cstdlib
 cmath
 -
 
+/home/hunter/Software/root-v6.14.00-build/include/TMatrixDBasefwd.h
+Rtypes.h
+/home/hunter/Software/root-v6.14.00-build/include/Rtypes.h
+
+/home/hunter/Software/root-v6.14.00-build/include/TMatrixFBasefwd.h
+Rtypes.h
+/home/hunter/Software/root-v6.14.00-build/include/Rtypes.h
+
 /home/hunter/Software/root-v6.14.00-build/include/TMethodCall.h
 TDictionary.h
 /home/hunter/Software/root-v6.14.00-build/include/TDictionary.h
@@ -719,6 +779,12 @@ TPoint.h
 /home/hunter/Software/root-v6.14.00-build/include/TPoint.h
 GuiTypes.h
 /home/hunter/Software/root-v6.14.00-build/include/GuiTypes.h
+
+/home/hunter/Software/root-v6.14.00-build/include/TPave.h
+TBox.h
+/home/hunter/Software/root-v6.14.00-build/include/TBox.h
+TString.h
+/home/hunter/Software/root-v6.14.00-build/include/TString.h
 
 /home/hunter/Software/root-v6.14.00-build/include/TPoint.h
 Rtypes.h
@@ -995,6 +1061,14 @@ list
 -
 TFile.h
 /home/hunter/projects/wheel/sipmwheel/TFile.h
+TF2.h
+/home/hunter/projects/wheel/sipmwheel/TF2.h
+TH2.h
+/home/hunter/projects/wheel/sipmwheel/TH2.h
+TGraphPolar.h
+/home/hunter/projects/wheel/sipmwheel/TGraphPolar.h
+TLegend.h
+/home/hunter/projects/wheel/sipmwheel/TLegend.h
 TCanvas.h
 /home/hunter/projects/wheel/sipmwheel/TCanvas.h
 Utilities.h

@@ -64,13 +64,6 @@ void FileReader::ReadFiles(SiPMToTriggerMap& sipmToTriggerMap, const SiPMToFiles
   for (const auto& sipm : map)
   {
     // Create a trigger list for this sipm
-    // If this is characterization, this is 
-    // just a list of the different biases
-    // Place a safety net here
-    if (config.process == "characterize") 
-    {
-      if (config.biases.size() != sipm.second.size()) { std::cout << "Error. The files do not match the biases listed in config.\n"; std::cout << std::endl; exit(1); } 
-    }
     std::vector<HitCandidateVec> triggerList;
     triggerList.reserve(sipm.second.size());
 
@@ -86,7 +79,7 @@ void FileReader::ReadFiles(SiPMToTriggerMap& sipmToTriggerMap, const SiPMToFiles
       ReadFile(hitCandVec, file, *bias, channel, config);
       // Safety net to protect against division settings
       if (hitCandVec.size() < 20) triggerList.emplace_back(hitCandVec);
-      bias++;
+      //bias++;
     }
     sipmToTriggerMap.emplace(channel, triggerList);
     channel++;
